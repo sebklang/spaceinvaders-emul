@@ -2,6 +2,20 @@
 #include "emulator.h"
 #include "macros.h"
 
+#define STAX(X) \
+    (X) = A
+
+#define LDAX(X) \
+    A = (X)
+
+#define MVI(X) \
+    (X) = op[1]; \
+    PC++
+
+#define LXI(X) \
+    (X) = DATA_WORD; \
+    PC += 2
+
 /// @brief Emulate one of the 8080's data transfer instructions
 /// @param state Pointer to state initialized using InitEmulator(...)
 /// @param op Pointer to instruction inside ROM memory
@@ -71,7 +85,9 @@ bool EmulateDataTransfer(EmulatorState *state, uint8_t *op)
             case 5: src = L; break;
             case 6: src = HL_INDIRECT; break;
             case 7: src = A; break;
-            default: printf("MOV impossible source register\n"); break;
+            default:
+                printf("MOV impossible source register\n");
+                return false;
             }
 
             switch (destIndex) {
@@ -83,13 +99,16 @@ bool EmulateDataTransfer(EmulatorState *state, uint8_t *op)
             case 5: dest = &L; break;
             case 6: dest = &HL_INDIRECT; break;
             case 7: dest = &A; break;
-            default: printf("MOV impossible destination register\n"); break;
+            default:
+                printf("MOV impossible destination register\n");
+                return false;
             }
 
             *dest = src;
         }
         else {
             printf("EmulateDataTransfer received invalid opcode 0x%02x\n", *op);
+            return false;
         }
         break;
     }

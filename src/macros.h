@@ -27,18 +27,4 @@
 #define DE_INDIRECT INDIRECT(DE)
 #define HL_INDIRECT INDIRECT(HL)
 
-#define STAX(X) \
-    (X) = A
-
-#define LDAX(X) \
-    A = (X)
-
-#define MVI(X) \
-    (X) = op[1]; \
-    PC++
-
-#define LXI(X) \
-    (X) = DATA_WORD; \
-    PC += 2
-
 #endif
