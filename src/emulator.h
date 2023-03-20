@@ -1,3 +1,6 @@
+#ifndef EMULATOR_H
+#define EMULATOR_H
+
 #include <stdint.h>
 
 typedef struct EmulatorFlags {
@@ -15,5 +18,7 @@ typedef struct EmulatorState {
     struct EmulatorFlags flags;
 } EmulatorState;
 
-void InitEmulator(uint8_t *memory);
-void EmulateInstruction(void);
+void InitEmulator(uint8_t *memory, EmulatorState *state);
+void EmulateInstruction(EmulatorState *state);
+
+#endif

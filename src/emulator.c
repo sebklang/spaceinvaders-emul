@@ -1,5 +1,15 @@
 #include "emulator.h"
 
+void EmulateDataTransfer(EmulatorState *state, uint8_t *op);
+void EmulateArithmetic(EmulatorState *state, uint8_t *op);
+void EmulateBranch(EmulatorState *state, uint8_t *op);
+void EmulateLogic(EmulatorState *state, uint8_t *op);
+void EmulateStack(EmulatorState *state, uint8_t *op);
+void EmulateMisc(EmulatorState *state, uint8_t *op);
+
+/// @brief Initialize an emulator, represented by a state object
+/// @param memory Pointer to pre-initialized memory of the emulator
+/// @param state Pointer to state to be initialized
 void InitEmulator(uint8_t *memory, EmulatorState *state)
 {
     state->a = 0;
@@ -19,37 +29,8 @@ void InitEmulator(uint8_t *memory, EmulatorState *state)
     state->flags.ac = 0;
 }
 
-void EmulateDataTransfer(EmulatorState *state, uint8_t *op)
-{
-    switch (*op) {
-    case 0x01: // LXI B,D16
-        state->b = op[2];
-        state->c = op[1];
-        state->pc += 2;
-        break;
-
-    case 0x02: // STAX B
-        state->memory[(state->b << 8) | state->c] = state->a;
-        break;
-    }
-}
-
-void EmulateArithmetic(EmulatorState *state, uint8_t *op)
-{
-    switch(*op) {
-    case 0x03: // INX B
-        state->c++;
-        if (state->c == 0)
-            state->b++;
-        break;
-    }
-}
-
-void EmulateBranch(EmulatorState *state, uint8_t *op);
-void EmulateLogical(EmulatorState *state, uint8_t *op);
-void EmulateStack(EmulatorState *state, uint8_t *op);
-void EmulateMisc(EmulatorState *state, uint8_t *op);
-
+/// @brief Emulate the next instruction
+/// @param state State/emulator to run
 void EmulateInstruction(EmulatorState *state)
 {
     uint8_t *op = &state->memory[state->pc];
@@ -85,7 +66,7 @@ void EmulateInstruction(EmulatorState *state)
     case 0x07: case 0x0f: case 0x17: case 0x1f:
     case 0x2f: case 0x37: case 0x3f: case 0xe6:
     case 0xee: case 0xf6: case 0xfe:
-        EmulateLogical(state, op);
+        EmulateLogic(state, op);
         break;
 
     // Branch
@@ -100,7 +81,7 @@ void EmulateInstruction(EmulatorState *state)
     case 0xf8: case 0xfa: case 0xfc: case 0xff:
         EmulateBranch(state, op);
         break;
-    
+
     case 0xc1: case 0xc5: case 0xd1: case 0xd5: case 0xe1:
     case 0xe3: case 0xe5: case 0xf1: case 0xf5: case 0xf9: 
         EmulateStack(state, op);
@@ -119,13 +100,13 @@ void EmulateInstruction(EmulatorState *state)
             EmulateArithmetic(state, op);
         }
         else if (*op >= 0xa0 && *op <= 0xbf) {
-            EmulateLogical(state, op);
+            EmulateLogic(state, op);
         }
-        printf("WARNING: default case encountered during emulation\n");
+        else {
+            printf("WARNING: default encountered. Instruction will be skipped. (*op = 0x%02x)\n", *op);
+        }
         break;
     }
-
-    // remaining in upper part: 0x27 DAA, 0x76 HLT
 
     state->pc++;
 }
