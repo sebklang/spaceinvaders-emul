@@ -1,4 +1,5 @@
 #include "emulator.h"
+#include "macros.h"
 
 void EmulateDataTransfer(EmulatorState *state, uint8_t *op);
 void EmulateArithmetic(EmulatorState *state, uint8_t *op);
@@ -12,28 +13,25 @@ void EmulateMisc(EmulatorState *state, uint8_t *op);
 /// @param state Pointer to state to be initialized
 void InitEmulator(uint8_t *memory, EmulatorState *state)
 {
-    state->a = 0;
-    state->b = 0;
-    state->c = 0;
-    state->d = 0;
-    state->e = 0;
-    state->h = 0;
-    state->l = 0;
-    state->sp = 0;
-    state->pc = 0;
-    state->memory = memory;
-    state->flags.s = 0;
-    state->flags.z = 0;
-    state->flags.p = 0;
-    state->flags.c = 0;
-    state->flags.ac = 0;
+    A = 0;
+    BC = 0;
+    DE = 0;
+    HL = 0;
+    SP = 0;
+    PC = 0;
+    MEM = memory;
+    FLAGS.s = 0;
+    FLAGS.z = 0;
+    FLAGS.p = 0;
+    FLAGS.c = 0;
+    FLAGS.ac = 0;
 }
 
 /// @brief Emulate the next instruction
 /// @param state State/emulator to run
 void EmulateInstruction(EmulatorState *state)
 {
-    uint8_t *op = &state->memory[state->pc];
+    uint8_t *op = &MEM[PC];
 
     switch (*op) {
     case 0x00: // NOP
@@ -108,5 +106,5 @@ void EmulateInstruction(EmulatorState *state)
         break;
     }
 
-    state->pc++;
+    PC++;
 }

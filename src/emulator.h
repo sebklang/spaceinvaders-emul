@@ -3,6 +3,15 @@
 
 #include <stdint.h>
 
+typedef struct Bytes {
+    uint8_t hi, lo;
+} Bytes;
+
+typedef union Word {
+    Bytes bytes;
+    uint16_t word;
+} Word;
+
 typedef struct EmulatorFlags {
     uint8_t s : 1;
     uint8_t z : 1;
@@ -12,8 +21,8 @@ typedef struct EmulatorFlags {
 } EmulatorFlags;
 
 typedef struct EmulatorState {
-    uint8_t a, b, c, d, e, h, l;
-    uint16_t sp, pc;
+    uint8_t a;
+    Word bc, de, hl, sp, pc;
     uint8_t *memory;
     struct EmulatorFlags flags;
 } EmulatorState;
