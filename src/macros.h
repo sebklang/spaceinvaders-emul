@@ -33,7 +33,7 @@
 #define SET_FLAGS_ZSP(X) \
     FLAGS.z  = (X) == 0; \
     FLAGS.s  = ((X) >> 7); \
-    FLAGS.p  = Parity(X); \
+    FLAGS.p  = Parity(X)
 
 uint8_t Parity(uint8_t x);
 

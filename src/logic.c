@@ -11,20 +11,19 @@
     FLAGS.c = 0; \
     IMM_SET_ZSP_PC
 
+#define REG_END \
+    FLAGS.c = 0; \
+    SET_FLAGS_ZSP(A)
+
+void RegularLogic(EmulatorState *state, uint8_t *op);
+
 /// @brief Emulate one of the 8080's logic instructions
 /// @param state Pointer to state initialized using InitEmulator(...)
 /// @param op Direct pointer to instruction inside ROM memory
 bool EmulateLogic(EmulatorState *state, uint8_t *op)
 {
-
-    /*
-    case 0x07: case 0x0f: case 0x17: case 0x1f:
-    case 0x2f: case 0x37: case 0x3f: case 0xe6:
-    case 0xee: case 0xf6: case 0xfe:
-    */
-
     uint8_t carry;
-    uint32_t cpi;
+    uint32_t compare;
 
     switch (*op) {
     case 0x07: // RLC
@@ -69,39 +68,13 @@ bool EmulateLogic(EmulatorState *state, uint8_t *op)
         IMM_END;
         break;
     case 0xfe: // CPI D8
-        cpi = A - DATA_BYTE;
-        FLAGS.c = cpi > 0xff;
+        compare = A - DATA_BYTE;
+        FLAGS.c = compare > 0xff;
         IMM_SET_ZSP_PC;
         break;
     default:
         if (*op >= 0xa0 && *op <= 0xbf) {
-            uint8_t term;
-            switch(*op % 8) {
-            case 0: term = B; break;
-            case 1: term = C; break;
-            case 2: term = D; break;
-            case 3: term = E; break;
-            case 4: term = H; break;
-            case 5: term = L; break;
-            case 6: term = HL_INDIRECT; break;
-            case 7: term = A; break;
-            default:
-                printf("Impossible logic term\n");
-                return false;
-            }
-            switch((*op - 0xa0) / 8) {
-            case 0: // ANA
-                break;
-            case 1: // XRA
-                break;
-            case 2: // ORA
-                break;
-            case 3: // CMP
-                break;
-            default:
-                printf("TODO");
-                return false;
-            }
+            RegularLogic(state, op);
         }
         else {
             return false;
@@ -109,4 +82,47 @@ bool EmulateLogic(EmulatorState *state, uint8_t *op)
     }
 
     return true;
+}
+
+void RegularLogic(EmulatorState *state, uint8_t *op)
+{
+    uint8_t term;
+    uint32_t compare;
+    
+    switch(*op % 8) {
+    case 0: term = B; break;
+    case 1: term = C; break;
+    case 2: term = D; break;
+    case 3: term = E; break;
+    case 4: term = H; break;
+    case 5: term = L; break;
+    case 6: term = HL_INDIRECT; break;
+    case 7: term = A; break;
+    default:
+        printf("Impossible logic term\n");
+        return false;
+    }
+
+    switch((*op - 0xa0) / 8) {
+    case 0: // ANA
+        A = A & term;
+        REG_END;
+        break;
+    case 1: // XRA
+        A = A ^ term;
+        REG_END;
+        break;
+    case 2: // ORA
+        A = A | term;
+        REG_END;
+        break;
+    case 3: // CMP
+        compare = A - term;
+        FLAGS.c = compare > 0xff;
+        SET_FLAGS_ZSP(compare);
+        break;
+    default:
+        printf("TODO");
+        return false;
+    }
 }
