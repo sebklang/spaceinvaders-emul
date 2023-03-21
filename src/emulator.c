@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include "emulator.h"
 #include "macros.h"
 

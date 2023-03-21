@@ -1,51 +1,39 @@
+#include <stdio.h>
 #include <stdbool.h>
 #include "emulator.h"
 #include "macros.h"
 
-#define SET_FLAGS(X) \
-    FLAGS.z  = (X) == 0; \
-    FLAGS.s  = ((X) >> 7); \
-    FLAGS.p  = Parity(X); \
-    FLAGS.ac = 0 // todo (probably won't -- only used for DAA)
+// TODO in this file: AC flag?
 
 #define INX(X) (X)++
-#define INR(X) (X)++; SET_FLAGS(X)
+#define INR(X) (X)++; SET_FLAGS_ZSP(X)
 #define DCX(X) (X)--;
-#define DCR(X) (X)--; SET_FLAGS(X)
+#define DCR(X) (X)--; SET_FLAGS_ZSP(X)
 #define DAD(X) \
     FLAGS.c = (uint32_t) HL + (X) > 0xffff; \
     HL += (X)
 #define ADI \
     FLAGS.c = (uint32_t) A + op[1] > 0xff; \
     A += op[1]; \
-    SET_FLAGS(A); \
+    SET_FLAGS_ZSP(A); \
     PC++
 #define ACI \
     cin = FLAGS.c; \
     FLAGS.c = (uint32_t) A + op[1] + cin > 0xff; \
     A += op[1] + cin; \
-    SET_FLAGS(A); \
+    SET_FLAGS_ZSP(A); \
     PC++
 #define SUI \
     FLAGS.c = (uint32_t) A - op[1] > 0xff; \
     A -= op[1]; \
-    SET_FLAGS(A); \
+    SET_FLAGS_ZSP(A); \
     PC++
 #define SBI \
     cin = FLAGS.c; \
     FLAGS.c = (uint32_t) A - op[1] - cin > 0xff; \
     A -= op[1] + cin; \
-    SET_FLAGS(A); \
+    SET_FLAGS_ZSP(A); \
     PC++
-
-uint8_t Parity(uint8_t x)
-{
-    uint8_t count = 0;
-    for (int i = 0; i < 8; i++) {
-        count += (x >> i) & 1;
-    }
-    return count % 2 == 0;
-}
 
 /// @brief Emulate one of the 8080's arithmetic instructions
 /// @param state Pointer to state initialized using InitEmulator(...)
@@ -100,7 +88,7 @@ bool EmulateArithmetic(EmulatorState *state, uint8_t *op)
             case 6: term = HL_INDIRECT; break;
             case 7: term = A; break;
             default:
-                printf("Impossible term\n");
+                printf("Impossible arithmetic term\n");
                 return false;
             }
 
@@ -128,7 +116,7 @@ bool EmulateArithmetic(EmulatorState *state, uint8_t *op)
                 return false;
             }
 
-            SET_FLAGS(A);
+            SET_FLAGS_ZSP(A);
         }
         else {
             printf("Impossible arithmetic instruction *op = %02x", *op);
