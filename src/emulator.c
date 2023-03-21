@@ -1,13 +1,14 @@
 #include <stdio.h>
+#include <stdbool.h>
 #include "emulator.h"
 #include "macros.h"
 
-void EmulateDataTransfer(EmulatorState *state, uint8_t *op);
-void EmulateArithmetic(EmulatorState *state, uint8_t *op);
-void EmulateBranch(EmulatorState *state, uint8_t *op);
-void EmulateLogic(EmulatorState *state, uint8_t *op);
-void EmulateStack(EmulatorState *state, uint8_t *op);
-void EmulateMisc(EmulatorState *state, uint8_t *op);
+bool EmulateDataTransfer(EmulatorState *state, uint8_t *op);
+bool EmulateArithmetic(EmulatorState *state, uint8_t *op);
+bool EmulateBranch(EmulatorState *state, uint8_t *op);
+bool EmulateLogic(EmulatorState *state, uint8_t *op);
+bool EmulateStack(EmulatorState *state, uint8_t *op);
+bool EmulateMisc(EmulatorState *state, uint8_t *op);
 
 /// @brief Initialize an emulator, represented by a state object
 /// @param memory Pointer to pre-initialized memory of the emulator

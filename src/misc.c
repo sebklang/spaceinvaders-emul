@@ -1,6 +1,7 @@
+#include <stdbool.h>
 #include "emulator.h"
 
-void EmulateMisc(EmulatorState *state, uint8_t *op)
+bool EmulateMisc(EmulatorState *state, uint8_t *op)
 {
 
 }

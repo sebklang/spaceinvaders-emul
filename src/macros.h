@@ -19,6 +19,8 @@
 
 #define SP (state->sp.word)
 #define PC (state->pc.word)
+#define PC_LO (state->pc.bytes.lo)
+#define PC_HI (state->pc.bytes.hi)
 #define FLAGS (state->flags)
 #define MEM (state->memory)
 
