@@ -6,16 +6,36 @@
     FLAGS.z  = (X) == 0; \
     FLAGS.s  = ((X) >> 7); \
     FLAGS.p  = Parity(X); \
-    FLAGS.ac = 0 // todo (probably won't)
+    FLAGS.ac = 0 // todo (probably won't -- only used for DAA)
 
 #define INX(X) (X)++
 #define INR(X) (X)++; SET_FLAGS(X)
 #define DCX(X) (X)--;
 #define DCR(X) (X)--; SET_FLAGS(X)
-#define DAD(X) FLAGS.c = (uint32_t) HL + (X) > 0xffff; HL += (X)
+#define DAD(X) \
+    FLAGS.c = (uint32_t) HL + (X) > 0xffff; \
+    HL += (X)
 #define ADI \
     FLAGS.c = (uint32_t) A + op[1] > 0xff; \
     A += op[1]; \
+    SET_FLAGS(A); \
+    PC++
+#define ACI \
+    cin = FLAGS.c; \
+    FLAGS.c = (uint32_t) A + op[1] + cin > 0xff; \
+    A += op[1] + cin; \
+    SET_FLAGS(A); \
+    PC++
+#define SUI \
+    FLAGS.c = (uint32_t) A - op[1] > 0xff; \
+    A -= op[1]; \
+    SET_FLAGS(A); \
+    PC++
+#define SBI \
+    cin = FLAGS.c; \
+    FLAGS.c = (uint32_t) A - op[1] - cin > 0xff; \
+    A -= op[1] + cin; \
+    SET_FLAGS(A); \
     PC++
 
 uint8_t Parity(uint8_t x)
@@ -32,17 +52,7 @@ uint8_t Parity(uint8_t x)
 /// @param op Direct pointer to instruction inside ROM memory
 bool EmulateArithmetic(EmulatorState *state, uint8_t *op)
 {
-
-    /*
-    case 0x03: case 0x04: case 0x05: case 0x09:
-    case 0x0b: case 0x0c: case 0x0d: case 0x13:
-    case 0x14: case 0x15: case 0x19: case 0x1b:
-    case 0x1c: case 0x1d: case 0x23: case 0x24:
-    case 0x25: case 0x29: case 0x2b: case 0x2c:
-    case 0x2d: case 0x33: case 0x34: case 0x35:
-    case 0x39: case 0x3b: case 0x3c: case 0x3d:
-    case 0xc6: case 0xce: case 0xd6: case 0xde:
-    */
+    uint8_t cin;
 
     switch(*op) {
     case 0x03: INX(BC);  break;
@@ -74,6 +84,56 @@ bool EmulateArithmetic(EmulatorState *state, uint8_t *op)
     case 0x3c: INR(A);   break;
     case 0x3d: DCR(A);   break;
     case 0xc6: ADI;      break;
-    case 0xce: 
+    case 0xce: ACI;      break;
+    case 0xd6: SUI;      break;
+    case 0xde: SBI;      break;
+    default:
+        if (*op >= 0x80 && *op <= 0x9f) {
+            uint8_t term;
+            switch (*op % 8) {
+            case 0: term = B; break;
+            case 1: term = C; break;
+            case 2: term = D; break;
+            case 3: term = E; break;
+            case 4: term = H; break;
+            case 5: term = L; break;
+            case 6: term = HL_INDIRECT; break;
+            case 7: term = A; break;
+            default:
+                printf("Impossible term\n");
+                return false;
+            }
+
+            switch ((*op - 0x80) / 8) {
+            case 0: // ADD
+                FLAGS.c = (uint32_t) A + term > 0xff;
+                A += term;
+                break;
+            case 1: // ADC
+                cin = FLAGS.c;
+                FLAGS.c = (uint32_t) A + term + cin > 0xff;
+                A += term + cin;
+                break;
+            case 2: // SUB
+                FLAGS.c = (uint32_t) A - term > 0xff;
+                A -= term;
+                break;
+            case 3: // SBB
+                cin = FLAGS.c;
+                FLAGS.c = (uint32_t) A - term - cin > 0xff;
+                A -= term + cin;
+                break;
+            default:
+                printf("Impossible case ADD/ADC/SUB/SBB\n");
+                return false;
+            }
+
+            SET_FLAGS(A);
+        }
+        else {
+            printf("Impossible arithmetic instruction *op = %02x", *op);
+        }
     }
+
+    return true;
 }
