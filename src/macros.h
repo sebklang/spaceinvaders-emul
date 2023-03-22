@@ -21,7 +21,8 @@
 #define PC (state->pc.word)
 #define PC_LO (state->pc.bytes.lo)
 #define PC_HI (state->pc.bytes.hi)
-#define FLAGS (state->flags)
+#define FLAGS (state->flags.fields)
+#define FLAG_BYTE (state->flags.byte)
 #define MEM (state->memory)
 
 #define DATA_BYTE (op[1])

@@ -23,11 +23,16 @@ typedef struct EmulatorFlags {
     uint8_t c  : 1;
 } EmulatorFlags;
 
+typedef union FlagUnion {
+    EmulatorFlags fields;
+    uint8_t byte;
+} FlagUnion;
+
 typedef struct EmulatorState {
     uint8_t a;
     Word bc, de, hl, sp, pc;
     uint8_t *memory;
-    struct EmulatorFlags flags;
+    union FlagUnion flags;
 } EmulatorState;
 
 void InitEmulator(uint8_t *memory, EmulatorState *state);
