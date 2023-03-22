@@ -27,6 +27,7 @@ void InitEmulator(uint8_t *memory, EmulatorState *state)
     FLAGS.p = 0;
     FLAGS.c = 0;
     FLAGS.ac = 0;
+    HALTED = false;
 }
 
 /// @brief Emulate the next instruction
