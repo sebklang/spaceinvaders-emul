@@ -13,6 +13,7 @@
     PC_LO = op[1]
 
 #define CALL \
+    PC += 3 \
     PUSH_PC; \
     JMP
 

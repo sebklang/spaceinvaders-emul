@@ -33,6 +33,7 @@ typedef struct EmulatorState {
     Word bc, de, hl, sp, pc;
     uint8_t *memory;
     union FlagUnion flags;
+    bool inte;
     bool halted;
 } EmulatorState;
 

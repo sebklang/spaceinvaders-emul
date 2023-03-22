@@ -111,5 +111,5 @@ void EmulateInstruction(EmulatorState *state)
         break;
     }
 
-    PC++;
+    PC++; // todo asfasfasldfjasdkfj
 }
