@@ -15,7 +15,7 @@
     FLAGS.c = 0; \
     SET_FLAGS_ZSP(A)
 
-void RegularLogic(EmulatorState *state, uint8_t *op);
+bool RegularLogic(EmulatorState *state, uint8_t *op);
 
 /// @brief Emulate one of the 8080's logic instructions
 /// @param state Pointer to state initialized using InitEmulator(...)
@@ -74,7 +74,7 @@ bool EmulateLogic(EmulatorState *state, uint8_t *op)
         break;
     default:
         if (*op >= 0xa0 && *op <= 0xbf) {
-            RegularLogic(state, op);
+            return RegularLogic(state, op);
         }
         else {
             return false;
@@ -84,7 +84,7 @@ bool EmulateLogic(EmulatorState *state, uint8_t *op)
     return true;
 }
 
-void RegularLogic(EmulatorState *state, uint8_t *op)
+bool RegularLogic(EmulatorState *state, uint8_t *op)
 {
     uint8_t term;
     uint32_t compare;
@@ -125,4 +125,6 @@ void RegularLogic(EmulatorState *state, uint8_t *op)
         printf("TODO");
         return false;
     }
+
+    return true;
 }

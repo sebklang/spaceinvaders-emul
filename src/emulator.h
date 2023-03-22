@@ -4,7 +4,7 @@
 #include <stdint.h>
 
 typedef struct Bytes {
-    uint8_t hi, lo;
+    uint8_t lo, hi; // This order is important
 } Bytes;
 
 typedef union Word {
