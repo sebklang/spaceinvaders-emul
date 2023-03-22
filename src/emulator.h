@@ -13,11 +13,14 @@ typedef union Word {
 } Word;
 
 typedef struct EmulatorFlags {
-    uint8_t s : 1;
-    uint8_t z : 1;
-    uint8_t p : 1;
-    uint8_t c : 1;
+    uint8_t s  : 1;
+    uint8_t z  : 1;
+    uint8_t _1 : 1; // Pad 1
     uint8_t ac : 1;
+    uint8_t _2 : 1; // Pad 2
+    uint8_t p  : 1;
+    uint8_t _3 : 1; // Pad 3
+    uint8_t c  : 1;
 } EmulatorFlags;
 
 typedef struct EmulatorState {

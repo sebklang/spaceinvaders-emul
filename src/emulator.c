@@ -82,11 +82,13 @@ void EmulateInstruction(EmulatorState *state)
         EmulateBranch(state, op);
         break;
 
+    // Stack
     case 0xc1: case 0xc5: case 0xd1: case 0xd5: case 0xe1:
     case 0xe3: case 0xe5: case 0xf1: case 0xf5: case 0xf9: 
         EmulateStack(state, op);
         break;
 
+    // IO and special instructions ("miscellaneous")
     case 0x27: case 0x76: case 0xd3:
     case 0xdb: case 0xf3: case 0xfb:
         EmulateMisc(state, op);
