@@ -1,3 +1,4 @@
+#include <stdio.h>
 #include <stdbool.h>
 #include "emulator.h"
 #include "macros.h"
@@ -29,19 +30,6 @@
 /// @param op Direct pointer to instruction inside ROM memory
 bool EmulateBranch(EmulatorState *state, uint8_t *op)
 {
-
-    /*
-    case 0xc0: case 0xc2: case 0xc3: case 0xc4:
-    case 0xc7: case 0xc8: case 0xc9: case 0xca:
-    case 0xcc: case 0xcd: case 0xcf: case 0xd0:
-    case 0xd2: case 0xd4: case 0xd7: case 0xd8:
-    case 0xda: case 0xdc: case 0xdf: case 0xe0:
-    case 0xe2: case 0xe4: case 0xe7: case 0xe8:
-    case 0xe9: case 0xea: case 0xec: case 0xef:
-    case 0xf0: case 0xf2: case 0xf4: case 0xf7:
-    case 0xf8: case 0xfa: case 0xfc: case 0xff:
-    */
-
     switch (*op)
     {
     case 0xc0: if (!FLAGS.z) RET;       break;
@@ -63,7 +51,30 @@ bool EmulateBranch(EmulatorState *state, uint8_t *op)
     case 0xda: if (FLAGS.c)  JMP;       break;
     case 0xdc: if (FLAGS.c)  CALL;      break;
     case 0xdf:               RST(0x18); break;
-    case 0xe0: // todo RPO
+    case 0xe0: if (!FLAGS.s) RET;       break;
+    case 0xe2: if (!FLAGS.s) JMP;       break;
+    case 0xe4: if (!FLAGS.s) CALL;      break;
+    case 0xe7:               RST(0x20); break;
+    case 0xe8: if (FLAGS.p)  RET;       break;
+    case 0xe9:
+        PC_HI = H;
+        PC_LO = L;
+        break;
+    case 0xea: if (FLAGS.p)  JMP;       break;
+    case 0xec: if (FLAGS.p)  CALL;      break;
+    case 0xef:               RST(0x28); break;
+    case 0xf0: if (!FLAGS.s) RET;       break;
+    case 0xf2: if (!FLAGS.s) JMP;       break;
+    case 0xf4: if (!FLAGS.s) CALL;      break;
+    case 0xf7:               RST(0x30); break;
+    case 0xf8: if (FLAGS.s)  RET;       break;
+    case 0xfa: if (FLAGS.s)  JMP;       break;
+    case 0xfc: if (FLAGS.s)  CALL;      break;
+    case 0xff:               RST(0x38); break;
+    default:
+        printf("In branch.c: default\n");
+        return false;
+        break;
     }
 
     return true;
