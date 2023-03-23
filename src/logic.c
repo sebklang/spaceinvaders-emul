@@ -122,7 +122,7 @@ bool RegularLogic(EmulatorState *state, uint8_t *op)
         SET_FLAGS_ZSP(compare);
         break;
     default:
-        printf("TODO");
+        printf("In logic.c/RegularLogic: default\n");
         return false;
     }
 

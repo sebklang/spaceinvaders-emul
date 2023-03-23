@@ -3,7 +3,7 @@
 #include "emulator.h"
 #include "macros.h"
 
-// TODO in this file: AC flag?
+// TODO in this file: AC flag
 
 #define INX(X) (X)++
 #define INR(X) (X)++; SET_FLAGS_ZSP(X)

@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+typedef uint32_t memsize_t;
+
 typedef struct Bytes {
     uint8_t lo, hi; // This order is important
 } Bytes;
@@ -32,12 +34,13 @@ typedef struct EmulatorState {
     uint8_t a;
     Word bc, de, hl, sp, pc;
     uint8_t *memory;
+    memsize_t memsize;
     union FlagUnion flags;
-    bool intenable;
     bool halted;
+    bool intEnable;
 } EmulatorState;
 
-void InitEmulator(uint8_t *memory, EmulatorState *state);
+void InitEmulator(uint8_t *memory, memsize_t memsize, EmulatorState *state);
 bool EmulateInstruction(EmulatorState *state);
 
 #endif

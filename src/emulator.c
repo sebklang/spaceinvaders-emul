@@ -13,7 +13,7 @@ bool EmulateMisc(EmulatorState *state, uint8_t *op);
 /// @brief Initialize an emulator, represented by a state object
 /// @param memory Pointer to pre-initialized memory of the emulator
 /// @param state Pointer to state to be initialized
-void InitEmulator(uint8_t *memory, EmulatorState *state)
+void InitEmulator(uint8_t *memory, memsize_t memsize, EmulatorState *state)
 {
     A = 0;
     BC = 0;
@@ -22,6 +22,7 @@ void InitEmulator(uint8_t *memory, EmulatorState *state)
     SP = 0;
     PC = 0;
     MEM = memory;
+    MEMSIZE = memsize;
     FLAGS.s = 0;
     FLAGS.z = 0;
     FLAGS.p = 0;

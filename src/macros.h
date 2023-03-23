@@ -24,8 +24,9 @@
 #define FLAGS (state->flags.fields)
 #define FLAG_BYTE (state->flags.byte)
 #define HALTED (state->halted)
-#define INT_ENABLE (state->intenable)
+#define INT_ENABLE (state->intEnable)
 #define MEM (state->memory)
+#define MEMSIZE (state->memsize)
 
 #define DATA_BYTE (op[1])
 #define DATA_WORD ((op[2] << 8) | op[1])
