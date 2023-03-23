@@ -1,4 +1,4 @@
 .vscode
 bin/*.exe
 bin/*.dll
-
+src/*.o
