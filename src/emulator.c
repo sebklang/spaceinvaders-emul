@@ -28,6 +28,7 @@ void InitEmulator(uint8_t *memory, EmulatorState *state)
     FLAGS.c = 0;
     FLAGS.ac = 0;
     HALTED = false;
+    INT_ENABLE = false; // TODO i have no idea what to initialize this to
 }
 
 /// @brief Emulate the next instruction
