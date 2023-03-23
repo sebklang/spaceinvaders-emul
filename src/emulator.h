@@ -2,6 +2,7 @@
 #define EMULATOR_H
 
 #include <stdint.h>
+#include <stdbool.h>
 
 typedef uint32_t memsize_t;
 
@@ -14,6 +15,7 @@ typedef union Word {
     uint16_t word;
 } Word;
 
+// TODO don't use bitfields? check gcc/mingw spec (THIS HAS TO BE 8 BITS EXACTLY)
 typedef struct EmulatorFlags {
     uint8_t s  : 1;
     uint8_t z  : 1;
