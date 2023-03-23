@@ -13,7 +13,7 @@
     PC_LO = op[1]
 
 #define CALL \
-    PC += 3 \
+    PC += 3; \
     PUSH_PC; \
     JMP
 
@@ -23,6 +23,7 @@
     SP += 2
 
 #define RST(X) \
+    PC++; \
     PUSH_PC; \
     PC = (X)
 
@@ -31,6 +32,7 @@
 /// @param op Direct pointer to instruction inside ROM memory
 bool EmulateBranch(EmulatorState *state, uint8_t *op)
 {
+    // NOTE: PC will not be incremented automatically
     switch (*op)
     {
     case 0xc0: if (!FLAGS.z) RET;       break;

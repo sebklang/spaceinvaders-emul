@@ -5,6 +5,7 @@
 
 bool EmulateMisc(EmulatorState *state, uint8_t *op)
 {
+    // NOTE: PC will not be incremented automatically
     switch (*op) {
     case 0x27: break; // DAA (Not used by space invaders)
     case 0x76: // HLT
