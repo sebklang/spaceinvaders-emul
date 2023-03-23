@@ -17,6 +17,8 @@
     (X) = DATA_WORD; \
     PC += 2
 
+bool RegularDataTransfer(EmulatorState *state, uint8_t *op);
+
 /// @brief Emulate one of the 8080's data transfer instructions
 /// @param state Pointer to state initialized using InitEmulator(...)
 /// @param op Pointer to instruction inside ROM memory
