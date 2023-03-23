@@ -72,40 +72,7 @@ bool EmulateDataTransfer(EmulatorState *state, uint8_t *op)
         break;
     default:
         if (*op >= 0x40 && *op <= 0x7f && *op != 0x76) {
-            // MOV
-            uint8_t  srcIndex =  *op         % 8;
-            uint8_t destIndex = (*op - 0x40) / 8;
-            uint8_t src, *dest;
-
-            switch (srcIndex) {
-            case 0: src = B; break;
-            case 1: src = C; break;
-            case 2: src = D; break;
-            case 3: src = E; break;
-            case 4: src = H; break;
-            case 5: src = L; break;
-            case 6: src = HL_INDIRECT; break;
-            case 7: src = A; break;
-            default:
-                printf("MOV impossible source register\n");
-                return false;
-            }
-
-            switch (destIndex) {
-            case 0: dest = &B; break;
-            case 1: dest = &C; break;
-            case 2: dest = &D; break;
-            case 3: dest = &E; break;
-            case 4: dest = &H; break;
-            case 5: dest = &L; break;
-            case 6: dest = &HL_INDIRECT; break;
-            case 7: dest = &A; break;
-            default:
-                printf("MOV impossible destination register\n");
-                return false;
-            }
-
-            *dest = src;
+            return RegularDataTransfer(state, op);
         }
         else {
             printf("EmulateDataTransfer received invalid opcode 0x%02x\n", *op);
@@ -114,5 +81,44 @@ bool EmulateDataTransfer(EmulatorState *state, uint8_t *op)
         break;
     }
 
+    return true;
+}
+
+bool RegularDataTransfer(EmulatorState *state, uint8_t *op)
+{
+    // MOV
+    uint8_t  srcIndex =  *op         % 8;
+    uint8_t destIndex = (*op - 0x40) / 8;
+    uint8_t src, *dest;
+
+    switch (srcIndex) {
+    case 0: src = B; break;
+    case 1: src = C; break;
+    case 2: src = D; break;
+    case 3: src = E; break;
+    case 4: src = H; break;
+    case 5: src = L; break;
+    case 6: src = HL_INDIRECT; break;
+    case 7: src = A; break;
+    default:
+        printf("MOV impossible source register\n");
+        return false;
+    }
+
+    switch (destIndex) {
+    case 0: dest = &B; break;
+    case 1: dest = &C; break;
+    case 2: dest = &D; break;
+    case 3: dest = &E; break;
+    case 4: dest = &H; break;
+    case 5: dest = &L; break;
+    case 6: dest = &HL_INDIRECT; break;
+    case 7: dest = &A; break;
+    default:
+        printf("MOV impossible destination register\n");
+        return false;
+    }
+
+    *dest = src;
     return true;
 }

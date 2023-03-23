@@ -35,6 +35,8 @@
     SET_FLAGS_ZSP(A); \
     PC++
 
+bool RegularArithmetic(EmulatorState *state, uint8_t *op);
+
 /// @brief Emulate one of the 8080's arithmetic instructions
 /// @param state Pointer to state initialized using InitEmulator(...)
 /// @param op Direct pointer to instruction inside ROM memory
@@ -77,46 +79,7 @@ bool EmulateArithmetic(EmulatorState *state, uint8_t *op)
     case 0xde: SBI;      break;
     default:
         if (*op >= 0x80 && *op <= 0x9f) {
-            uint8_t term;
-            switch (*op % 8) {
-            case 0: term = B; break;
-            case 1: term = C; break;
-            case 2: term = D; break;
-            case 3: term = E; break;
-            case 4: term = H; break;
-            case 5: term = L; break;
-            case 6: term = HL_INDIRECT; break;
-            case 7: term = A; break;
-            default:
-                printf("Impossible arithmetic term\n");
-                return false;
-            }
-
-            switch ((*op - 0x80) / 8) {
-            case 0: // ADD
-                FLAGS.c = (uint32_t) A + term > 0xff;
-                A += term;
-                break;
-            case 1: // ADC
-                cin = FLAGS.c;
-                FLAGS.c = (uint32_t) A + term + cin > 0xff;
-                A += term + cin;
-                break;
-            case 2: // SUB
-                FLAGS.c = (uint32_t) A - term > 0xff;
-                A -= term;
-                break;
-            case 3: // SBB
-                cin = FLAGS.c;
-                FLAGS.c = (uint32_t) A - term - cin > 0xff;
-                A -= term + cin;
-                break;
-            default:
-                printf("Impossible case ADD/ADC/SUB/SBB\n");
-                return false;
-            }
-
-            SET_FLAGS_ZSP(A);
+            return RegularArithmetic(state, op);
         }
         else {
             printf("Impossible arithmetic instruction *op = %02x", *op);
@@ -124,4 +87,49 @@ bool EmulateArithmetic(EmulatorState *state, uint8_t *op)
     }
 
     return true;
+}
+
+bool RegularArithmetic(EmulatorState *state, uint8_t *op)
+{
+    uint8_t cin;
+    uint8_t term;
+    switch (*op % 8) {
+    case 0: term = B; break;
+    case 1: term = C; break;
+    case 2: term = D; break;
+    case 3: term = E; break;
+    case 4: term = H; break;
+    case 5: term = L; break;
+    case 6: term = HL_INDIRECT; break;
+    case 7: term = A; break;
+    default:
+        printf("Impossible arithmetic term\n");
+        return false;
+    }
+
+    switch ((*op - 0x80) / 8) {
+    case 0: // ADD
+        FLAGS.c = (uint32_t) A + term > 0xff;
+        A += term;
+        break;
+    case 1: // ADC
+        cin = FLAGS.c;
+        FLAGS.c = (uint32_t) A + term + cin > 0xff;
+        A += term + cin;
+        break;
+    case 2: // SUB
+        FLAGS.c = (uint32_t) A - term > 0xff;
+        A -= term;
+        break;
+    case 3: // SBB
+        cin = FLAGS.c;
+        FLAGS.c = (uint32_t) A - term - cin > 0xff;
+        A -= term + cin;
+        break;
+    default:
+        printf("Impossible case ADD/ADC/SUB/SBB\n");
+        return false;
+    }
+
+    SET_FLAGS_ZSP(A);
 }
