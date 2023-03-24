@@ -11,15 +11,20 @@ bool EmulateMisc(EmulatorState *state, uint8_t *op)
         break;
     case 0x76: // HLT
         HALTED = true;
-        PC++;
         break;
     case 0xd3: // OUT D8
+
+        PC++;
         break;
     case 0xdb: // IN D8
+
+        PC++;
         break;
     case 0xf3: // DI
+        INT_ENABLE = false;
         break;
     case 0xfb: // EI
+        INT_ENABLE = true;
         break;
     default:
         printf("In misc.c: default\n");

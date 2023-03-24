@@ -39,7 +39,7 @@ bool EmulateInstruction(EmulatorState *state)
     if (HALTED) return true;
 
     uint8_t *op = &MEM[PC];
-    bool opIsBranchOrMisc = false; // PC will not be automatically incremented in these ops!
+    bool opIsBranch = false; // PC will not be automatically incremented in these ops!
 
     switch (*op) {
     case 0x00: // NOP
@@ -85,7 +85,7 @@ bool EmulateInstruction(EmulatorState *state)
     case 0xe9: case 0xea: case 0xec: case 0xef:
     case 0xf0: case 0xf2: case 0xf4: case 0xf7:
     case 0xf8: case 0xfa: case 0xfc: case 0xff:
-        opIsBranchOrMisc = true;
+        opIsBranch = true;
         return EmulateBranch(state, op);
         break;
 
@@ -98,7 +98,6 @@ bool EmulateInstruction(EmulatorState *state)
     // IO and special instructions ("miscellaneous")
     case 0x27: case 0x76: case 0xd3:
     case 0xdb: case 0xf3: case 0xfb:
-        opIsBranchOrMisc = true;
         return EmulateMisc(state, op);
         break;
 
@@ -118,7 +117,7 @@ bool EmulateInstruction(EmulatorState *state)
         break;
     }
 
-    if (!opIsBranchOrMisc)
+    if (!opIsBranch)
         PC++;
     
     return true;
