@@ -13,11 +13,13 @@ bool EmulateMisc(EmulatorState *state, uint8_t *op)
         HALTED = true;
         break;
     case 0xd3: // OUT D8
-
+        if (state->outputHandler != NULL)
+            state->outputHandler(DATA_BYTE, A);
         PC++;
         break;
     case 0xdb: // IN D8
-
+        if (state->inputHandler != NULL)
+            A = state->inputHandler(DATA_BYTE);
         PC++;
         break;
     case 0xf3: // DI
