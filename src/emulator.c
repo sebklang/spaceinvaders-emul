@@ -3,19 +3,20 @@
 #include "emulator.h"
 #include "macros.h"
 
-bool EmulateDataTransfer(EmulatorState *state, uint8_t *op);
-bool EmulateArithmetic(EmulatorState *state, uint8_t *op);
-bool EmulateBranch(EmulatorState *state, uint8_t *op);
-bool EmulateLogic(EmulatorState *state, uint8_t *op);
-bool EmulateStack(EmulatorState *state, uint8_t *op);
-bool EmulateMisc(EmulatorState *state, uint8_t *op);
+bool EmulateDataTransfer (EmulatorState *state, uint8_t *op);
+bool EmulateArithmetic   (EmulatorState *state, uint8_t *op);
+bool EmulateBranch       (EmulatorState *state, uint8_t *op);
+bool EmulateLogic        (EmulatorState *state, uint8_t *op);
+bool EmulateStack        (EmulatorState *state, uint8_t *op);
+bool EmulateMisc         (EmulatorState *state, uint8_t *op);
 
 /// @brief Initialize an emulator, represented by a state object
 /// @param memory Pointer to pre-initialized memory of the emulator
+/// @param memsize The number of bytes allocated to memory (max 65536)
+/// @param ih Pointer to input handler function accepting a device code as parameter and returning the input to be stored in the accumulator. May be null if input is not used.
+/// @param oh Pointer to output handler function accepting a device code and a byte of output as parameters and returning void. May be null if output is not used.
 /// @param state Pointer to state to be initialized
-void InitEmulator(uint8_t *memory, memsize_t memsize,
-                  InputHandler ih, OutputHandler oh,
-                  EmulatorState *state)
+void InitEmulator(EmulatorState *state, uint8_t *memory, memsize_t memsize, InputHandler ih, OutputHandler oh)
 {
     A = 0;
     BC = 0;
