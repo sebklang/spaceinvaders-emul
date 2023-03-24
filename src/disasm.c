@@ -1,11 +1,12 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include "disasm.h"
 
-int disasmSingleInstruction(FILE *out, char *buffer, int pc)
+int disasmSingleInstruction(FILE *out, uint8_t *buffer, int pc)
 {
-    unsigned char *op = buffer + pc;
+    uint8_t *op = buffer + pc;
     int opsize = 1;
     fprintf(out, "%04x\t%02x\t", pc, *op);
 
