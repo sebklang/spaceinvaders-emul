@@ -13,7 +13,9 @@ bool EmulateMisc(EmulatorState *state, uint8_t *op);
 /// @brief Initialize an emulator, represented by a state object
 /// @param memory Pointer to pre-initialized memory of the emulator
 /// @param state Pointer to state to be initialized
-void InitEmulator(uint8_t *memory, memsize_t memsize, EmulatorState *state)
+void InitEmulator(uint8_t *memory, memsize_t memsize,
+                  InputHandler ih, OutputHandler oh,
+                  EmulatorState *state)
 {
     A = 0;
     BC = 0;
@@ -30,6 +32,8 @@ void InitEmulator(uint8_t *memory, memsize_t memsize, EmulatorState *state)
     FLAGS.ac = 0;
     HALTED = false;
     INT_ENABLE = false; // TODO i have no idea what to initialize this to
+    state->inputHandler = ih;
+    state->outputHandler = oh;
 }
 
 /// @brief Emulate the next instruction

@@ -3,6 +3,7 @@
 
 #include <stdint.h>
 #include <stdbool.h>
+#include "io.h"
 
 typedef uint32_t memsize_t;
 
@@ -40,9 +41,13 @@ typedef struct EmulatorState {
     union FlagUnion flags;
     bool halted;
     bool intEnable;
+    InputHandler inputHandler;
+    OutputHandler outputHandler;
 } EmulatorState;
 
-void InitEmulator(uint8_t *memory, memsize_t memsize, EmulatorState *state);
+void InitEmulator(uint8_t *memory, memsize_t memsize,
+                  InputHandler ih, OutputHandler oh,
+                  EmulatorState *state);
 bool EmulateInstruction(EmulatorState *state);
 
 #endif
