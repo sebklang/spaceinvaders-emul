@@ -17,7 +17,7 @@ typedef union Word {
 } Word;
 
 // TODO don't use bitfields? check gcc/mingw spec (THIS HAS TO BE 8 BITS EXACTLY)
-typedef struct EmulatorFlags {
+/*typedef struct EmulatorFlags {
     uint8_t s  : 1;
     uint8_t z  : 1;
     uint8_t _1 : 1; // Pad 1
@@ -26,19 +26,19 @@ typedef struct EmulatorFlags {
     uint8_t p  : 1;
     uint8_t _3 : 1; // Pad 3
     uint8_t c  : 1;
-} EmulatorFlags;
+} EmulatorFlags;*/
 
-typedef union FlagUnion {
+/*typedef union FlagUnion {
     EmulatorFlags fields;
     uint8_t byte;
-} FlagUnion;
+} FlagUnion;*/
 
 typedef struct EmulatorState {
     uint8_t a;
     Word bc, de, hl, sp, pc;
     uint8_t *memory;
     memsize_t memsize;
-    union FlagUnion flags;
+    uint8_t flags;
     bool halted;
     bool intEnable;
     InputHandler inputHandler;
