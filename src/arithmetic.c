@@ -10,27 +10,27 @@
 #define DCX(X) (X)--;
 #define DCR(X) (X)--; SET_FLAGS_ZSP(X)
 #define DAD(X) \
-    FLAGS.c = (uint32_t) HL + (X) > 0xffff; \
+    SET_FLAG_C((uint32_t) HL + (X) > 0xffff); \
     HL += (X)
 #define ADI \
-    FLAGS.c = (uint32_t) A + op[1] > 0xff; \
+    SET_FLAG_C((uint32_t) A + op[1] > 0xff); \
     A += op[1]; \
     SET_FLAGS_ZSP(A); \
     PC++
 #define ACI \
-    cin = FLAGS.c; \
-    FLAGS.c = (uint32_t) A + op[1] + cin > 0xff; \
+    cin = FLAG_C; \
+    SET_FLAG_C((uint32_t) A + op[1] + cin > 0xff); \
     A += op[1] + cin; \
     SET_FLAGS_ZSP(A); \
     PC++
 #define SUI \
-    FLAGS.c = (uint32_t) A - op[1] > 0xff; \
+    SET_FLAG_C((uint32_t) A - op[1] > 0xff); \
     A -= op[1]; \
     SET_FLAGS_ZSP(A); \
     PC++
 #define SBI \
-    cin = FLAGS.c; \
-    FLAGS.c = (uint32_t) A - op[1] - cin > 0xff; \
+    cin = FLAG_C; \
+    SET_FLAG_C((uint32_t) A - op[1] - cin > 0xff); \
     A -= op[1] + cin; \
     SET_FLAGS_ZSP(A); \
     PC++
@@ -109,21 +109,21 @@ bool RegularArithmetic(EmulatorState *state, uint8_t *op)
 
     switch ((*op - 0x80) / 8) {
     case 0: // ADD
-        FLAGS.c = (uint32_t) A + term > 0xff;
+        SET_FLAG_C((uint32_t) A + term > 0xff);
         A += term;
         break;
     case 1: // ADC
-        cin = FLAGS.c;
-        FLAGS.c = (uint32_t) A + term + cin > 0xff;
+        cin = FLAG_C;
+        SET_FLAG_C((uint32_t) A + term + cin > 0xff);
         A += term + cin;
         break;
     case 2: // SUB
-        FLAGS.c = (uint32_t) A - term > 0xff;
+        SET_FLAG_C((uint32_t) A - term > 0xff);
         A -= term;
         break;
     case 3: // SBB
-        cin = FLAGS.c;
-        FLAGS.c = (uint32_t) A - term - cin > 0xff;
+        cin = FLAG_C;
+        SET_FLAG_C((uint32_t) A - term - cin > 0xff);
         A -= term + cin;
         break;
     default:

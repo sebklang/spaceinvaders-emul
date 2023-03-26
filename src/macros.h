@@ -27,36 +27,27 @@
 #define MEM (state->memory)
 #define MEMSIZE (state->memsize)
 
-/*typedef struct EmulatorFlags {
-    uint8_t s  : 1;
-    uint8_t z  : 1;
-    uint8_t _1 : 1; // Pad 1
-    uint8_t ac : 1;
-    uint8_t _2 : 1; // Pad 2
-    uint8_t p  : 1;
-    uint8_t _3 : 1; // Pad 3
-    uint8_t c  : 1;
-} EmulatorFlags;*/
+#define FLAG_N(N) ((FLAG_BYTE >> (N)) & 1)
+#define SET_FLAG_N(N, X) \
+    if (B) \
+        FLAG_BYTE |=  (1 << (X)); \
+    else \
+        FLAG_BYTE &= ~(1 << (X))
 
-#define FLAG_S  ((FLAG_BYTE >> 7) & 1)
-#define SET_FLAG_S  FLAG_BYTE |=  0x80
-#define RST_FLAG_S  FLAG_BYTE &= ~0x80
+#define FLAG_S FLAG_N(7)
+#define SET_FLAG_S(X) SET_FLAG_N(7, X)
 
-#define FLAG_Z  ((FLAG_BYTE >> 6) & 1)
-#define SET_FLAG_Z  FLAG_BYTE |=  0x40
-#define RST_FLAG_Z  FLAG_BYTE &= ~0x40
+#define FLAG_Z FLAG_N(6)
+#define SET_FLAG_Z(X) SET_FLAG_N(6, X)
 
-#define FLAG_AC ((FLAG_BYTE >> 4) & 1)
-#define SET_FLAG_AC FLAG_BYTE |=  0x10
-#define RST_FLAG_AC FLAG_BYTE &= ~0x10
+#define FLAG_AC FLAG_N(4)
+#define SET_FLAG_AC(X) SET_FLAG_N(4, X)
 
-#define FLAG_P  ((FLAG_BYTE >> 2) & 1)
-#define SET_FLAG_P  FLAG_BYTE |=  0x04
-#define RST_FLAG_P  FLAG_BYTE &= ~0x04
+#define FLAG_P FLAG_N(2)
+#define SET_FLAG_P(X) SET_FLAG_N(2, X)
 
-#define FLAG_C  ((FLAG_BYTE >> 0) & 1)
-#define SET_FLAG_C  FLAG_BYTE |=  0x01
-#define RST_FLAG_C  FLAG_BYTE &= ~0x01
+#define FLAG_C FLAG_N(0)
+#define SET_FLAG_C(X) SET_FLAG_N(0, X)
 
 #define DATA_BYTE (op[1])
 #define DATA_WORD ((op[2] << 8) | op[1])
@@ -67,9 +58,9 @@
 #define HL_INDIRECT INDIRECT(HL)
 
 #define SET_FLAGS_ZSP(X) \
-    if ((X) == 0)   SET_FLAG_Z; else RST_FLAG_Z; \
-    if ((X) & 0x80) SET_FLAG_S; else RST_FLAG_S; \
-    if (Parity(X))  SET_FLAG_P; else RST_FLAG_P
+    SET_FLAG_Z((X) == 0); \
+    SET_FLAG_S((X) & 0x80); \
+    SET_FLAG_P(Parity(X))
 
 uint8_t Parity(uint8_t x);
 

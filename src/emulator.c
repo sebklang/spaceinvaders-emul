@@ -26,11 +26,11 @@ void InitEmulator(EmulatorState *state, uint8_t *memory, memsize_t memsize, Inpu
     PC = 0;
     MEM = memory;
     MEMSIZE = memsize;
-    FLAGS.s = 0;
-    FLAGS.z = 0;
-    FLAGS.p = 0;
-    FLAGS.c = 0;
-    FLAGS.ac = 0;
+    SET_FLAG_S(0);
+    SET_FLAG_Z(0);
+    SET_FLAG_P(0);
+    SET_FLAG_C(0);
+    SET_FLAG_AC(0);
     HALTED = false;
     INT_ENABLE = false; // TODO i have no idea what to initialize this to
     state->inputHandler = ih;

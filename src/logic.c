@@ -8,11 +8,11 @@
     PC++
 
 #define IMM_END \
-    FLAGS.c = 0; \
+    SET_FLAG_C(0); \
     IMM_SET_ZSP_PC
 
 #define REG_END \
-    FLAGS.c = 0; \
+    SET_FLAG_C(0); \
     SET_FLAGS_ZSP(A)
 
 bool RegularLogic(EmulatorState *state, uint8_t *op);
@@ -29,31 +29,31 @@ bool EmulateLogic(EmulatorState *state, uint8_t *op)
     case 0x07: // RLC
         carry = A >> 7;
         A = (A << 1) | carry;
-        FLAGS.c = carry;
+        SET_FLAG_C(carry);
         break;
     case 0x0f: // RRC
         carry = A & 1;
         A = (A >> 1) | (carry << 7);
-        FLAGS.c = carry;
+        SET_FLAG_C(carry);
         break;
     case 0x17: // RAL
         carry = A >> 7;
-        A = (A << 1) | FLAGS.c;
-        FLAGS.c = carry;
+        A = (A << 1) | FLAG_C;
+        SET_FLAG_C(carry);
         break;
     case 0x1f: // RAR
         carry = A & 1;
-        A = (A >> 1) | (FLAGS.c << 7);
-        FLAGS.c = carry;
+        A = (A >> 1) | (FLAG_C << 7);
+        SET_FLAG_C(carry);
         break;
     case 0x2f: // CMA
         A = ~A;
         break;
     case 0x37: // STC
-        FLAGS.c = 1;
+        SET_FLAG_C(1);
         break;
     case 0x3f: // CMC
-        FLAGS.c = ~FLAGS.c;
+        SET_FLAG_C(~FLAG_C);
         break;
     case 0xe6: // ANI D8
         A = A & DATA_BYTE;
@@ -69,7 +69,7 @@ bool EmulateLogic(EmulatorState *state, uint8_t *op)
         break;
     case 0xfe: // CPI D8
         compare = A - DATA_BYTE;
-        FLAGS.c = compare > 0xff;
+        SET_FLAG_C(compare > 0xff);
         IMM_SET_ZSP_PC;
         break;
     default:
@@ -118,7 +118,7 @@ bool RegularLogic(EmulatorState *state, uint8_t *op)
         break;
     case 3: // CMP
         compare = A - term;
-        FLAGS.c = compare > 0xff;
+        SET_FLAG_C(compare > 0xff);
         SET_FLAGS_ZSP(compare);
         break;
     default:
