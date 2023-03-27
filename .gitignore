@@ -6,3 +6,5 @@ src/*.o
 disasm
 *.exe
 Makefile
+main*
+

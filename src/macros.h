@@ -33,10 +33,10 @@
 
 #define FLAG_N(N) ((FLAG_BYTE >> (N)) & 1)
 #define SET_FLAG_N(N, X) \
-    if (B) \
-        FLAG_BYTE |=  (1 << (X)); \
+    if (X) \
+        FLAG_BYTE |=  (1 << (N)); \
     else \
-        FLAG_BYTE &= ~(1 << (X))
+        FLAG_BYTE &= ~(1 << (N))
 
 #define FLAG_S FLAG_N(7)
 #define SET_FLAG_S(X) SET_FLAG_N(7, X)

@@ -1,31 +1,48 @@
+#include <stdint.h>
 #include <stdio.h>
 #include <stdbool.h>
 #include "emulator.h"
 #include "macros.h"
 
-#define PUSH_PC \
-    MEM[SP - 1] = PC_HI; \
-    MEM[SP - 2] = PC_LO; \
-    SP -= 2
+void PushPc(EmulatorState *state)
+{
+    MEM[SP - 1] = PC_HI;
+    MEM[SP - 2] = PC_LO;
+    SP -= 2;
+}
 
-#define JMP \
-    PC_HI = op[2]; \
-    PC_LO = op[1]
+void Jmp(EmulatorState *state, uint8_t *op)
+{
+    PC_HI = op[2];
+    PC_LO = op[1];
+}
 
-#define CALL \
-    PC += 3; \
-    PUSH_PC; \
-    JMP
+void Call(EmulatorState *state, uint8_t *op)
+{
+    PC += 3;
+    PushPc(state);
+    Jmp(state, op);
+}
 
-#define RET \
-    PC_HI = MEM[SP + 1]; \
-    PC_LO = MEM[SP]; \
-    SP += 2
+void Ret(EmulatorState *state)
+{
+    PC_HI = MEM[SP + 1];
+    PC_LO = MEM[SP];
+    SP += 2;
+}
 
-#define RST(X) \
-    PC++; \
-    PUSH_PC; \
-    PC = (X)
+void Rst(EmulatorState *state, uint8_t adr)
+{ 
+    PC++;
+    PushPc(state);
+    PC = adr;
+}
+
+#define PUSH_PC PushPc(state)
+#define JMP Jmp(state, op)
+#define CALL Call(state, op)
+#define RET Ret(state)
+#define RST(X) Rst(state, (X))
 
 /// @brief Emulate one of the 8080's branch instructions
 /// @param state Pointer to state initialized using InitEmulator(...)
@@ -39,7 +56,7 @@ bool EmulateBranch(EmulatorState *state, uint8_t *op)
     case 0xc2: if (!FLAG_Z) JMP;       break;
     case 0xc3:              JMP;       break;
     case 0xc4: if (!FLAG_Z) CALL;      break;
-    case 0xc7:               RST(0x00); break;
+    case 0xc7:              RST(0x00); break;
     case 0xc8: if (FLAG_Z)  RET;       break;
     case 0xc9:              RET;       break;
     case 0xca: if (FLAG_Z)  JMP;       break;

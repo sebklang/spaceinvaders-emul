@@ -48,6 +48,12 @@ bool EmulateArithmetic(EmulatorState *state, uint8_t *op)
     case 0x03: INX(BC);  break;
     case 0x04: INR(B);   break;
     case 0x05: DCR(B);   break;
+    /*case 0x05:
+        B--;
+        SET_FLAG_N(6, B == 0);
+        SET_FLAG_S(B & 0x80);
+        SET_FLAG_P(Parity(B));
+        break;*/
     case 0x09: DAD(BC);  break;
     case 0x0b: DCX(BC);  break;
     case 0x0c: INR(C);   break;
