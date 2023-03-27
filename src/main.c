@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "emulator.h"
 #include "macros.h"
 #include "disasm.h"
@@ -38,13 +39,18 @@ int main(int argc, char *argv[])
         printf("    ----\n    Carry = %d\n", FLAG_C);
         printf("Halted = %d\nIrq Enable = %d\n\n", HALTED, INT_ENABLE);
 
-        printf("Press enter for next instruction.\n");
-        printf("Next instruction to be emulated is:\n");
-
+        printf("Type the number of instructions to execute,\nor press enter to execute the next instruction.\n");
+        printf("Next instruction to be executed is:\n");
         DisasmSingleInstruction(stdout, memory, PC);
-        int input;
-        scanf("%d", &input);
-        for (int i = 0; i < input; i++) {
+
+        char inString[256];
+        fgets(inString, 256, stdin);
+        int numIter;
+        if (inString[0] == '\n')
+            numIter = 1;
+        else
+            numIter = atoi(inString);
+        for (int i = 0; i < numIter; i++) {
             if (!EmulateInstruction(state)) {
                 printf("Fatal error!\n");
             }

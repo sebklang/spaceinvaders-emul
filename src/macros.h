@@ -32,11 +32,12 @@
 #define MEMSIZE (state->memsize)
 
 #define FLAG_N(N) ((FLAG_BYTE >> (N)) & 1)
-#define SET_FLAG_N(N, X) \
+#define SET_FLAG_N(N, X) { \
     if (X) \
         FLAG_BYTE |=  (1 << (N)); \
     else \
-        FLAG_BYTE &= ~(1 << (N))
+        FLAG_BYTE &= ~(1 << (N)); \
+}
 
 #define FLAG_S FLAG_N(7)
 #define SET_FLAG_S(X) SET_FLAG_N(7, X)
@@ -61,10 +62,11 @@
 #define DE_INDIRECT INDIRECT(DE)
 #define HL_INDIRECT INDIRECT(HL)
 
-#define SET_FLAGS_ZSP(X) \
+#define SET_FLAGS_ZSP(X) { \
     SET_FLAG_Z((X) == 0); \
     SET_FLAG_S((X) & 0x80); \
-    SET_FLAG_P(Parity(X))
+    SET_FLAG_P(Parity(X)); \
+}
 
 uint8_t Parity(uint8_t x);
 
