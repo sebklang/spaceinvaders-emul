@@ -49,6 +49,7 @@ bool EmulateInstruction(EmulatorState *state)
 
     switch (*op) {
     case 0x00: // NOP
+        returnCode = true;
         break;
 
     // Data Transfer
@@ -119,6 +120,7 @@ bool EmulateInstruction(EmulatorState *state)
         }
         else {
             printf("WARNING: default encountered. Instruction will be skipped. (*op = 0x%02x)\n", *op);
+            returnCode = false;
         }
         break;
     }
