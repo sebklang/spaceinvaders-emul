@@ -18,9 +18,13 @@
 #define HL (state->hl.word)
 
 #define SP (state->sp.word)
+#define SP_LO (state->sp.bytes.lo)
+#define SP_HI (state->sp.bytes.hi)
+
 #define PC (state->pc.word)
 #define PC_LO (state->pc.bytes.lo)
 #define PC_HI (state->pc.bytes.hi)
+
 #define FLAG_BYTE (state->flags)
 #define HALTED (state->halted)
 #define INT_ENABLE (state->intEnable)

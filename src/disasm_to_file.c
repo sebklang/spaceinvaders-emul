@@ -35,7 +35,7 @@ int main(int argc, char **argv)
 
     int pc = 0;
     while (pc < filesize) {
-        pc += disasmSingleInstruction(out, rom, pc);
+        pc += DisasmSingleInstruction(out, rom, pc);
     }
 
     fclose(out);

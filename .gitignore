@@ -4,3 +4,5 @@ bin/*.dll
 src/*.o
 *.asm
 disasm
+*.exe
+

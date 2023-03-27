@@ -5,7 +5,7 @@
 #include "disasm.h"
 
 // This function could be a lot shorter and neater, but i cba
-int disasmSingleInstruction(FILE *out, uint8_t *buffer, int pc)
+int DisasmSingleInstruction(FILE *out, uint8_t *buffer, int pc)
 {
     uint8_t *op = buffer + pc;
     int opsize = 1;

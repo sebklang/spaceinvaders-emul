@@ -1,16 +1,53 @@
+#include <stdio.h>
+#include <stdlib.h>
 #include "emulator.h"
+#include "macros.h"
 #include "disasm.h"
-
-void printState(EmulatorState *state)
-{
-    
-}
 
 int main(int argc, char *argv[])
 {
-    uint8_t memory[] = {
-        0x00,               // NOP
+    char const * const fn = "bin/invaders.rom";
+    FILE *file;
+    if ((file = fopen(fn, "rb")) == NULL) {
+        printf("Failed to open file %s for reading. Exiting...", fn);
+        return 1;
+    }
+    fseek(file, 0L, SEEK_END);
+    int filesize = ftell(file);
+    fseek(file, 0L, SEEK_SET);
 
-    };
+    unsigned char *memory = malloc(filesize);
+
+    fread(memory, filesize, 1, file);
+    fclose(file);
+
+    EmulatorState state_;
+    InitEmulator(&state_, memory, filesize, NULL, NULL);
+    EmulatorState *state = &state_;
+
+    while (PC < MEMSIZE) {
+        for (int i = 0; i < 10; i++) printf("\n");
+
+        printf("Current state:\nA = %02x\nBC = %02x %02x\n", A, B, C);
+        printf("DE = %02x %02x\nHL = %02x %02x\n", D, E, H, L);
+        printf("SP = %02x %02x\n", SP_HI, SP_LO);
+        printf("PC = %02x %02x\n", PC_HI, PC_LO);
+        printf("Flag byte = %02x\n", FLAG_BYTE);
+        printf("    Sign = %d\n    Zero = %d\n    ----\n", FLAG_S, FLAG_Z);
+        printf("    Aux Carry = %d\n    ----\n    Parity = %d\n", FLAG_AC, FLAG_P);
+        printf("    ----\n    Carry = %d\n", FLAG_C);
+        printf("Halted = %d\nIrq Enable = %d\n\n", HALTED, INT_ENABLE);
+
+        printf("Press enter for next instruction.\n");
+        printf("Next instruction to be emulated is:\n");
+
+        DisasmSingleInstruction(stdout, memory, PC);
+        while (getchar() != '\n');
+        if (!EmulateInstruction(state)) {
+            printf("Fatal error!\n");
+        }
+    }
+
+    printf("Reached end of memory.\n");
     return 0;
 }
