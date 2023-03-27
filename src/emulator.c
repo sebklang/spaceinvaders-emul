@@ -58,7 +58,7 @@ bool EmulateInstruction(EmulatorState *state)
     case 0x26: case 0x2a: case 0x2e:
     case 0x31: case 0x32: case 0x36:
     case 0x3a: case 0x3e: case 0xeb:
-        return EmulateDataTransfer(state, op);
+        if (!EmulateDataTransfer(state, op)) return false;
         break;
 
     // Arithmetic
@@ -70,14 +70,14 @@ bool EmulateInstruction(EmulatorState *state)
     case 0x2d: case 0x33: case 0x34: case 0x35:
     case 0x39: case 0x3b: case 0x3c: case 0x3d:
     case 0xc6: case 0xce: case 0xd6: case 0xde:
-        return EmulateArithmetic(state, op);
+        if (!EmulateArithmetic(state, op)) return false;
         break;
     
     // Logical
     case 0x07: case 0x0f: case 0x17: case 0x1f:
     case 0x2f: case 0x37: case 0x3f: case 0xe6:
     case 0xee: case 0xf6: case 0xfe:
-        return EmulateLogic(state, op);
+        if (!EmulateLogic(state, op)) return false;
         break;
 
     // Branch
@@ -91,30 +91,30 @@ bool EmulateInstruction(EmulatorState *state)
     case 0xf0: case 0xf2: case 0xf4: case 0xf7:
     case 0xf8: case 0xfa: case 0xfc: case 0xff:
         opIsBranch = true;
-        return EmulateBranch(state, op);
+        if (!EmulateBranch(state, op)) return false;
         break;
 
     // Stack
     case 0xc1: case 0xc5: case 0xd1: case 0xd5: case 0xe1:
     case 0xe3: case 0xe5: case 0xf1: case 0xf5: case 0xf9: 
-        return EmulateStack(state, op);
+        if (!EmulateStack(state, op)) return false;
         break;
 
     // IO and special instructions ("miscellaneous")
     case 0x27: case 0x76: case 0xd3:
     case 0xdb: case 0xf3: case 0xfb:
-        return EmulateMisc(state, op);
+        if (!EmulateMisc(state, op)) return false;
         break;
 
     default:
         if (*op >= 0x40 && *op <= 0x7f && *op != 0x76) {
-            return EmulateDataTransfer(state, op);
+            if (!EmulateDataTransfer(state, op)) return false;
         }
         else if (*op >= 0x80 && *op <= 0x9f) {
-            return EmulateArithmetic(state, op);
+            if (EmulateArithmetic(state, op)) return false;
         }
         else if (*op >= 0xa0 && *op <= 0xbf) {
-            return EmulateLogic(state, op);
+            if (!EmulateLogic(state, op)) return false;
         }
         else {
             printf("WARNING: default encountered. Instruction will be skipped. (*op = 0x%02x)\n", *op);
