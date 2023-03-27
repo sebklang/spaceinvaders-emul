@@ -5,6 +5,8 @@
 
 // TODO in this file: AC flag
 
+// WARNING: These macros are really bad! Do not use them
+// as a compound statement unless surrounded by brackets!
 #define INX(X) (X)++
 #define INR(X) (X)++; SET_FLAGS_ZSP(X)
 #define DCX(X) (X)--;

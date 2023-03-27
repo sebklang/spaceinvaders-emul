@@ -22,8 +22,8 @@ int main(int argc, char *argv[])
     fclose(file);
 
     EmulatorState state_;
-    InitEmulator(&state_, memory, filesize, NULL, NULL);
     EmulatorState *state = &state_;
+    InitEmulator(state, memory, filesize, NULL, NULL);
 
     while (PC < MEMSIZE) {
         for (int i = 0; i < 10; i++) printf("\n");
@@ -42,9 +42,12 @@ int main(int argc, char *argv[])
         printf("Next instruction to be emulated is:\n");
 
         DisasmSingleInstruction(stdout, memory, PC);
-        while (getchar() != '\n');
-        if (!EmulateInstruction(state)) {
-            printf("Fatal error!\n");
+        int input;
+        scanf("%d", &input);
+        for (int i = 0; i < input; i++) {
+            if (!EmulateInstruction(state)) {
+                printf("Fatal error!\n");
+            }
         }
     }
 
