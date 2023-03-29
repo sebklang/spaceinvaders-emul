@@ -2,6 +2,7 @@
 #define MACROS_H
 
 #include <stdint.h>
+#include "memaccess.h"
 
 #define A  (state->a)
 
@@ -57,7 +58,7 @@
 #define DATA_BYTE (op[1])
 #define DATA_WORD ((op[2] << 8) | op[1])
 
-#define INDIRECT(X) (state->memory[(X)])
+#define INDIRECT(X) (*GetMem(state, (X)))
 #define BC_INDIRECT INDIRECT(BC)
 #define DE_INDIRECT INDIRECT(DE)
 #define HL_INDIRECT INDIRECT(HL)

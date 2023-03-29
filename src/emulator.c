@@ -43,7 +43,7 @@ bool EmulateInstruction(EmulatorState *state)
 {
     if (HALTED) return true;
 
-    uint8_t *op = &MEM[PC];
+    uint8_t *op = GetMem(state, PC);
     bool opIsBranch = false; // PC will not be automatically incremented in these ops!
     bool returnCode = false;
 

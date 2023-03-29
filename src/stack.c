@@ -4,13 +4,13 @@
 #include "macros.h"
 
 #define POP(X, Y) \
-    (X) = MEM[SP + 1]; \
-    (Y) = MEM[SP]; \
+    (X) = *GetMem(state, SP + 1); \
+    (Y) = *GetMem(state, SP); \
     SP += 2
 
 #define PUSH(X, Y) \
-    MEM[SP - 1] = (X); \
-    MEM[SP - 2] = (Y); \
+    SetMem(state, SP - 1, (X)); \
+    SetMem(state, SP - 2, (Y)); \
     SP -= 2
 
 bool EmulateStack(EmulatorState *state, uint8_t *op)
@@ -30,11 +30,11 @@ bool EmulateStack(EmulatorState *state, uint8_t *op)
     case 0xf9: SP = HL;      break;
     case 0xe3: // XHTL
         temp = H;
-        H = MEM[SP + 1];
-        MEM[SP + 1] = temp;
+        H = *GetMem(state, SP + 1);
+        SetMem(state, SP + 1, temp);
         temp = L;
-        L = MEM[SP];
-        MEM[SP] = temp;
+        L = *GetMem(state, SP);
+        SetMem(state, SP, temp);
         break;
     default:
         printf("In stack.c: default\n");

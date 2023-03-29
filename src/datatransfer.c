@@ -41,26 +41,26 @@ bool EmulateDataTransfer(EmulatorState *state, uint8_t *op)
     case 0x21: LXI(HL);           break;
     case 0x22: // SHLD adr
         adr = DATA_WORD;
-        MEM[adr + 1] = H;
-        MEM[adr + 0] = L;
+        SetMem(state, adr + 1, H);
+        SetMem(state, adr + 0, L);
         PC += 2;
         break;
     case 0x26: MVI(H); break;
     case 0x2a: // LHLD adr
         adr = DATA_WORD;
-        H = MEM[adr + 1];
-        L = MEM[adr + 0];
+        H = *GetMem(state, adr + 1);
+        L = *GetMem(state, adr + 0);
         PC += 2;
         break;
     case 0x2e: MVI(L);  break;
     case 0x31: LXI(SP); break;
     case 0x32: // STA adr
-        MEM[DATA_WORD] = A;
+        SetMem(state, DATA_WORD, A);
         PC += 2;
         break;
     case 0x36: MVI(HL_INDIRECT); break;
     case 0x3a: // LDA adr
-        A = MEM[DATA_WORD];
+        A = *GetMem(state, DATA_WORD);
         PC += 2;
         break;
     case 0x3e: MVI(A); break;

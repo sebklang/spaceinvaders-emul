@@ -6,8 +6,8 @@
 
 void PushPc(EmulatorState *state)
 {
-    MEM[SP - 1] = PC_HI;
-    MEM[SP - 2] = PC_LO;
+    SetMem(state, SP - 1, PC_HI);
+    SetMem(state, SP - 2, PC_LO);
     SP -= 2;
 }
 
@@ -26,8 +26,8 @@ void Call(EmulatorState *state, uint8_t *op)
 
 void Ret(EmulatorState *state)
 {
-    PC_HI = MEM[SP + 1];
-    PC_LO = MEM[SP];
+    PC_HI = *GetMem(state, SP + 1);
+    PC_LO = *GetMem(state, SP);
     SP += 2;
 }
 
