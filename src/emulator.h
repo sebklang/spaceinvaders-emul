@@ -18,7 +18,7 @@ typedef union Word {
 
 typedef struct EmulatorState {
     uint8_t a;
-    Word bc, de, hl, sp, pc;
+    Word bc, de, hl, sp, pc, instrPtr;
     uint8_t *memory;
     memsize_t memsize;
     uint8_t flags;

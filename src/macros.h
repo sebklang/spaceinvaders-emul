@@ -25,6 +25,7 @@
 #define PC (state->pc.word)
 #define PC_LO (state->pc.bytes.lo)
 #define PC_HI (state->pc.bytes.hi)
+#define INSTR_PTR (state->instrPtr)
 
 #define FLAG_BYTE (state->flags)
 #define HALTED (state->halted)
@@ -55,8 +56,11 @@
 #define FLAG_C FLAG_N(0)
 #define SET_FLAG_C(X) SET_FLAG_N(0, X)
 
-#define DATA_BYTE (op[1])
-#define DATA_WORD ((op[2] << 8) | op[1])
+#define OP_1 (*GetMem(state, INSTR_PTR.word + 1))
+#define OP_2 (*GetMem(state, INSTR_PTR.word + 2))
+
+#define DATA_BYTE (OP_1)
+#define DATA_WORD ((OP_2 << 8) | OP_1)
 
 #define INDIRECT(X) (*GetMem(state, (X)))
 #define BC_INDIRECT INDIRECT(BC)

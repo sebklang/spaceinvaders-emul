@@ -10,7 +10,7 @@
     A = (X)
 
 #define MVI(X) \
-    (X) = op[1]; \
+    (X) = OP_1; \
     PC++
 
 #define LXI(X) \

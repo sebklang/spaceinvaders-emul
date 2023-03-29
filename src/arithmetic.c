@@ -15,25 +15,25 @@
     SET_FLAG_C((uint32_t) HL + (X) > 0xffff); \
     HL += (X)
 #define ADI \
-    SET_FLAG_C((uint32_t) A + op[1] > 0xff); \
-    A += op[1]; \
+    SET_FLAG_C((uint32_t) A + OP_1 > 0xff); \
+    A += OP_1; \
     SET_FLAGS_ZSP(A); \
     PC++
 #define ACI \
     cin = FLAG_C; \
-    SET_FLAG_C((uint32_t) A + op[1] + cin > 0xff); \
-    A += op[1] + cin; \
+    SET_FLAG_C((uint32_t) A + OP_1 + cin > 0xff); \
+    A += OP_1 + cin; \
     SET_FLAGS_ZSP(A); \
     PC++
 #define SUI \
-    SET_FLAG_C((uint32_t) A - op[1] > 0xff); \
-    A -= op[1]; \
+    SET_FLAG_C((uint32_t) A - OP_1 > 0xff); \
+    A -= OP_1; \
     SET_FLAGS_ZSP(A); \
     PC++
 #define SBI \
     cin = FLAG_C; \
-    SET_FLAG_C((uint32_t) A - op[1] - cin > 0xff); \
-    A -= op[1] + cin; \
+    SET_FLAG_C((uint32_t) A - OP_1 - cin > 0xff); \
+    A -= OP_1 + cin; \
     SET_FLAGS_ZSP(A); \
     PC++
 

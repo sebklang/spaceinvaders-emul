@@ -24,6 +24,7 @@ void InitEmulator(EmulatorState *state, uint8_t *memory, memsize_t memsize, Inpu
     HL = 0;
     SP = 0;
     PC = 0;
+    INSTR_PTR.word = 0;
     MEM = memory;
     MEMSIZE = memsize;
     SET_FLAG_S(0);
@@ -46,6 +47,7 @@ bool EmulateInstruction(EmulatorState *state)
     uint8_t *op = GetMem(state, PC);
     bool opIsBranch = false; // PC will not be automatically incremented in these ops!
     bool returnCode = false;
+    INSTR_PTR = state->pc;
 
     switch (*op) {
     case 0x00: // NOP

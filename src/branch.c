@@ -13,8 +13,8 @@ void PushPc(EmulatorState *state)
 
 void Jmp(EmulatorState *state, uint8_t *op)
 {
-    PC_HI = op[2];
-    PC_LO = op[1];
+    PC_HI = OP_2;
+    PC_LO = OP_1;
 }
 
 void Call(EmulatorState *state, uint8_t *op)
