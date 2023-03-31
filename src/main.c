@@ -45,11 +45,23 @@ int main(int argc, char *argv[])
 
         char inString[256];
         fgets(inString, 256, stdin);
-        int numIter;
-        if (inString[0] == '\n')
+        int numIter = 0;
+
+        if (inString[0] == '\n') {
             numIter = 1;
-        else
+        }
+        else if (strcmp(inString, "ps") == 0) {
+            printf("--- STACK ---\n");
+            printf("Address\tValue");
+            for (int i = 0x23ff; i >= SP; i--) { // 0x2400 is specific to space invaders
+                printf("%04x\t%02x\n", i, *GetMem(state, i));
+            }
+            printf("--- End of stack ---");
+        }
+        else {
             numIter = atoi(inString);
+        }
+
         for (int i = 0; i < numIter; i++) {
             if (!EmulateInstruction(state)) {
                 printf("Fatal error!\n");
