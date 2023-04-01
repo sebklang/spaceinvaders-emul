@@ -121,7 +121,7 @@ bool EmulateInstruction(EmulatorState *state)
             returnCode = EmulateLogic(state, op);
         }
         else {
-            printf("WARNING: default encountered. Instruction will be skipped. (*op = 0x%02x)\n", *op);
+            printf("WARNING: default encountered. Instruction will be skipped.\n(pc = %04x; *op = 0x%02x)\n", PC, *op);
             returnCode = false;
         }
         break;

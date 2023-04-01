@@ -5,30 +5,50 @@
 #include "macros.h"
 #include "disasm.h"
 
+typedef struct Frame {
+    char **const arr;
+    const int size;
+    int cur;
+} Frame;
+
+void AddToFrame(Frame *frame, char *elem)
+{
+    frame->arr[frame->cur] = elem;
+    frame->cur++;
+    if (frame->cur >= frame->size)
+        frame->cur = 0;
+}
+
 int main(int argc, char *argv[])
 {
-    char const *const fn = "bin/invaders.rom";
     FILE *file;
+    int filesize;
+    uint8_t *memory;
+    bool printState;
+    EmulatorState state_;
+
+    EmulatorState *state = &state_;
+    int  const memsize   = 1 << 16;
+    char const *const fn = "bin/invaders.rom";
+
+    // Initialize memory from ROM file
     if ((file = fopen(fn, "rb")) == NULL) {
         printf("Failed to open file %s for reading. Exiting...", fn);
         return 1;
     }
     fseek(file, 0L, SEEK_END);
-    int filesize = ftell(file);
-    fseek(file, 0L, SEEK_SET);
-    int memsize = 1 << 16;
-
-    unsigned char *memory = malloc(memsize);
-
+    filesize = ftell(file);
+    *memory = malloc(memsize);
     fread(memory, filesize, 1, file);
     fclose(file);
+    fseek(file, 0L, SEEK_SET);
+    // -----
 
-    EmulatorState state_;
-    EmulatorState *state = &state_;
     InitEmulator(state, memory, memsize, NULL, NULL);
-    bool printState = true;
+    printState = true;
 
     while (PC < MEMSIZE) {
+        // Output
         if (printState) {
             for (int i = 0; i < 10; i++) printf("\n");
             printf("Current state:\nA = %02x\nBC = %02x %02x\n", A, B, C);
@@ -47,6 +67,7 @@ int main(int argc, char *argv[])
         }
         printState = true;
 
+        // Input
         char inString[256];
         fgets(inString, 256, stdin);
         int numIter = 0;
@@ -68,6 +89,7 @@ int main(int argc, char *argv[])
 
         if (numIter == 0) printState = false;
 
+        // Execution
         for (int i = 0; i < numIter; i++) {
             if (!EmulateInstruction(state)) {
                 printf("Fatal error!\n");
