@@ -4,20 +4,9 @@
 #include "emulator.h"
 #include "macros.h"
 #include "disasm.h"
+#include "debug.h"
 
-typedef struct DebugFrame {
-    char **const arr;
-    const int size;
-    int cur;
-} DebugFrame;
-
-void AddToFrame(DebugFrame *frame, char *elem)
-{
-    frame->arr[frame->cur] = elem;
-    frame->cur++;
-    if (frame->cur >= frame->size)
-        frame->cur = 0;
-}
+#define DEBUG_FRAME_LENGTH 10
 
 int main(int argc, char *argv[])
 {
@@ -25,11 +14,14 @@ int main(int argc, char *argv[])
     int filesize;
     uint8_t *memory;
     bool printState;
+    char dbgstrs[DEBUG_FRAME_LENGTH][256] = {0};
     EmulatorState state_;
 
     EmulatorState *state = &state_;
     int  const memsize   = 1 << 16;
     char const *const fn = "bin/invaders.rom";
+    DebugFrame dbg_ = {(char **) dbgstrs, DEBUG_FRAME_LENGTH, 0};
+    DebugFrame *dbg = &dbg_;
 
     // Initialize memory from ROM file
     if ((file = fopen(fn, "rb")) == NULL) {
@@ -38,7 +30,7 @@ int main(int argc, char *argv[])
     }
     fseek(file, 0L, SEEK_END);
     filesize = ftell(file);
-    *memory = malloc(memsize);
+    memory = malloc(memsize);
     fread(memory, filesize, 1, file);
     fclose(file);
     fseek(file, 0L, SEEK_SET);
@@ -91,8 +83,11 @@ int main(int argc, char *argv[])
 
         // Execution
         for (int i = 0; i < numIter; i++) {
+            WriteLnToFrame(dbg, state);
+
             if (!EmulateInstruction(state)) {
-                printf("Fatal error!\n");
+                printf("Fatal error! Printing last %d executed instructions...\n", dbg->size);
+                PrintFrame(dbg);
             }
         }
     }
