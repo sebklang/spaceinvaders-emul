@@ -5,13 +5,13 @@
 #include "macros.h"
 #include "disasm.h"
 
-typedef struct Frame {
+typedef struct DebugFrame {
     char **const arr;
     const int size;
     int cur;
-} Frame;
+} DebugFrame;
 
-void AddToFrame(Frame *frame, char *elem)
+void AddToFrame(DebugFrame *frame, char *elem)
 {
     frame->arr[frame->cur] = elem;
     frame->cur++;
