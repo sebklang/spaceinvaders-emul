@@ -5,6 +5,6 @@
 #include <stdint.h>
 
 #define FILE_ENDING ".asm"
-int DisasmSingleInstruction(FILE*, uint8_t*, int);
+int DisasmSingleInstruction(char *, uint8_t *, int);
 
 #endif

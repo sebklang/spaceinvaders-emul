@@ -7,11 +7,9 @@ FILE *fmemopen (void *buf, size_t size, const char *opentype);
 
 void WriteLnToFrame(DebugFrame *frame, EmulatorState *state)
 {
-    FILE *dbgstream = fmemopen(frame->arr[frame->cur], 256, "w");
-    DisasmSingleInstruction(dbgstream, state->memory, PC);
+    DisasmSingleInstruction(frame->arr[frame->cur], state->memory, PC);
     frame->cur++;
     frame->cur %= frame->size;
-    fclose(dbgstream);
 }
 
 void PrintFrame(DebugFrame *frame)

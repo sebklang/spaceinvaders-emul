@@ -16,6 +16,7 @@ int main(int argc, char *argv[])
     bool printState;
     char dbgstrs[DEBUG_FRAME_LENGTH][256] = {0};
     EmulatorState state_;
+    char disasmOut[256];
 
     EmulatorState *state = &state_;
     int  const memsize   = 1 << 16;
@@ -55,7 +56,8 @@ int main(int argc, char *argv[])
 
             printf("Type the number of instructions to execute,\nor press enter to execute the next instruction.\n");
             printf("Next instruction to be executed is:\n");
-            DisasmSingleInstruction(stdout, memory, PC);
+            DisasmSingleInstruction(disasmOut, memory, PC);
+            printf("%s", disasmOut); 
         }
         printState = true;
 

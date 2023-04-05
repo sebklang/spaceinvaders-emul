@@ -5,6 +5,8 @@
 
 int main(int argc, char **argv)
 {
+    char s[256];
+
     if (argc < 2) {
         printf("Missing input file argument. Exiting...");
         return EXIT_FAILURE;
@@ -35,7 +37,8 @@ int main(int argc, char **argv)
 
     int pc = 0;
     while (pc < filesize) {
-        pc += DisasmSingleInstruction(out, rom, pc);
+        pc += DisasmSingleInstruction(s, rom, pc);
+        fprintf(out, "%s", s);
     }
 
     fclose(out);
