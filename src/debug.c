@@ -2,8 +2,6 @@
 #include "debug.h"
 #include "disasm.h"
 #include "macros.h"
-/// @brief Defined in GNU stdio.h
-FILE *fmemopen (void *buf, size_t size, const char *opentype);
 
 void WriteLnToFrame(DebugFrame *frame, EmulatorState *state)
 {
