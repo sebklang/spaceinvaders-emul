@@ -7,1084 +7,1088 @@
 // This function could be a lot shorter and neater, but i cba
 int DisasmSingleInstruction(char *out, uint8_t *buffer, int pc)
 {
+    char instr[32];
     uint8_t *op = buffer + pc;
     int opsize = 1;
-    sprintf(out, "%04x\t%02x\t", pc, *op);
+    #define ADR_OP_STR "%04x\t%02x\t"
+    sprintf(out, ADR_OP_STR, pc, *op);
+    out += sizeof ADR_OP_STR - 1;
+    #undef ADR_OP_STR
 
     switch (*op) {
     case 0x00:
-        sprintf(out, "NOP");
+        sprintf(instr, "NOP");
         break;
 
     case 0x01:
-        sprintf(out, "LXI\tB,#$%02x%02x", op[2], op[1]);
+        sprintf(instr, "LXI\tB,#$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0x02:
-        sprintf(out, "STAX\tB");
+        sprintf(instr, "STAX\tB");
         break;
 
     case 0x03:
-        sprintf(out, "INX\tB");
+        sprintf(instr, "INX\tB");
         break;
 
     case 0x04:
-        sprintf(out, "INR\tB");
+        sprintf(instr, "INR\tB");
         break;
 
     case 0x05:
-        sprintf(out, "DCR\tB");
+        sprintf(instr, "DCR\tB");
         break;
 
     case 0x06:
-        sprintf(out, "MVI\tB,#$%02x", op[1]);
+        sprintf(instr, "MVI\tB,#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0x07:
-        sprintf(out, "RLC");
+        sprintf(instr, "RLC");
         break;
 
     case 0x08:
-        sprintf(out, "[0x08 not implemented]");
+        sprintf(instr, "[0x08 not implemented]");
         break;
 
     case 0x09:
-        sprintf(out, "DAD\tB");
+        sprintf(instr, "DAD\tB");
         break;
 
     case 0x0a:
-        sprintf(out, "LDAX\tB");
+        sprintf(instr, "LDAX\tB");
         break;
 
     case 0x0b:
-        sprintf(out, "DCX\tB");
+        sprintf(instr, "DCX\tB");
         break;
 
     case 0x0c:
-        sprintf(out, "INR\tC");
+        sprintf(instr, "INR\tC");
         break;
 
     case 0x0d:
-        sprintf(out, "DCR\tC");
+        sprintf(instr, "DCR\tC");
         break;
 
     case 0x0e:
-        sprintf(out, "MVI\tC,#$%02x", op[1]);
+        sprintf(instr, "MVI\tC,#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0x0f:
-        sprintf(out, "RRC");
+        sprintf(instr, "RRC");
         break;
 
     case 0x10:
-        sprintf(out, "[0x10 not implemented]");
+        sprintf(instr, "[0x10 not implemented]");
         break;
 
     case 0x11:
-        sprintf(out, "LXI\tD,#$%02x%02x", op[2], op[1]);
+        sprintf(instr, "LXI\tD,#$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0x12:
-        sprintf(out, "STAX\tD");
+        sprintf(instr, "STAX\tD");
         break;
 
     case 0x13:
-        sprintf(out, "INX\tD");
+        sprintf(instr, "INX\tD");
         break;
 
     case 0x14:
-        sprintf(out, "INR\tD");
+        sprintf(instr, "INR\tD");
         break;
 
     case 0x15:
-        sprintf(out, "DCR\tD");
+        sprintf(instr, "DCR\tD");
         break;
 
     case 0x16:
-        sprintf(out, "MVI\tD,#$%02x", op[1]);
+        sprintf(instr, "MVI\tD,#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0x17:
-        sprintf(out, "RAL");
+        sprintf(instr, "RAL");
         break;
 
     case 0x18:
-        sprintf(out, "[0x18 not implemented]");
+        sprintf(instr, "[0x18 not implemented]");
         break;
 
     case 0x19:
-        sprintf(out, "DAD\tD");
+        sprintf(instr, "DAD\tD");
         break;
 
     case 0x1a:
-        sprintf(out, "LDAX\tD");
+        sprintf(instr, "LDAX\tD");
         break;
 
     case 0x1b:
-        sprintf(out, "DCX\tD");
+        sprintf(instr, "DCX\tD");
         break;
 
     case 0x1c:
-        sprintf(out, "INR\tE");
+        sprintf(instr, "INR\tE");
         break;
 
     case 0x1d:
-        sprintf(out, "DCR\tE");
+        sprintf(instr, "DCR\tE");
         break;
 
     case 0x1e:
-        sprintf(out, "MVI\tE,#$%02x", op[1]);
+        sprintf(instr, "MVI\tE,#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0x1f:
-        sprintf(out, "RAR");
+        sprintf(instr, "RAR");
         break;
 
     case 0x20:
-        sprintf(out, "[0x20 not implemented]");
+        sprintf(instr, "[0x20 not implemented]");
         break;
 
     case 0x21:
-        sprintf(out, "LXI\tH,#$%02x%02x", op[2], op[1]);
+        sprintf(instr, "LXI\tH,#$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0x22:
-        sprintf(out, "SHLD\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "SHLD\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0x23:
-        sprintf(out, "INX\tH");
+        sprintf(instr, "INX\tH");
         break;
 
     case 0x24:
-        sprintf(out, "INR\tH");
+        sprintf(instr, "INR\tH");
         break;
 
     case 0x25:
-        sprintf(out, "DCR\tH");
+        sprintf(instr, "DCR\tH");
         break;
 
     case 0x26:
-        sprintf(out, "MVI\tH,#$%02x", op[1]);
+        sprintf(instr, "MVI\tH,#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0x27:
-        sprintf(out, "DAA");
+        sprintf(instr, "DAA");
         break;
 
     case 0x28:
-        sprintf(out, "[0x28 not implemented]");
+        sprintf(instr, "[0x28 not implemented]");
         break;
 
     case 0x29:
-        sprintf(out, "DAD\tH");
+        sprintf(instr, "DAD\tH");
         break;
 
     case 0x2a:
-        sprintf(out, "LHLD\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "LHLD\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0x2b:
-        sprintf(out, "DCX\tH");
+        sprintf(instr, "DCX\tH");
         break;
 
     case 0x2c:
-        sprintf(out, "INR\tL");
+        sprintf(instr, "INR\tL");
         break;
 
     case 0x2d:
-        sprintf(out, "DCR\tL");
+        sprintf(instr, "DCR\tL");
         break;
 
     case 0x2e:
-        sprintf(out, "MVI\tL,#$%02x", op[1]);
+        sprintf(instr, "MVI\tL,#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0x2f:
-        sprintf(out, "CMA");
+        sprintf(instr, "CMA");
         break;
 
     case 0x30:
-        sprintf(out, "[0x30 not implemented]");
+        sprintf(instr, "[0x30 not implemented]");
         break;
 
     case 0x31:
-        sprintf(out, "LXI\tSP,#$%02x%02x", op[2], op[1]);
+        sprintf(instr, "LXI\tSP,#$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0x32:
-        sprintf(out, "STA\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "STA\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0x33:
-        sprintf(out, "INX\tSP");
+        sprintf(instr, "INX\tSP");
         break;
 
     case 0x34:
-        sprintf(out, "INR\tM");
+        sprintf(instr, "INR\tM");
         break;
 
     case 0x35:
-        sprintf(out, "DCR\tM");
+        sprintf(instr, "DCR\tM");
         break;
 
     case 0x36:
-        sprintf(out, "MVI\tM,#$%02x", op[1]);
+        sprintf(instr, "MVI\tM,#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0x37:
-        sprintf(out, "STC");
+        sprintf(instr, "STC");
         break;
 
     case 0x38:
-        sprintf(out, "[0x38 not implemented]");
+        sprintf(instr, "[0x38 not implemented]");
         break;
 
     case 0x39:
-        sprintf(out, "DAD\tSP");
+        sprintf(instr, "DAD\tSP");
         break;
 
     case 0x3a:
-        sprintf(out, "LDA\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "LDA\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0x3b:
-        sprintf(out, "DCX\tSP");
+        sprintf(instr, "DCX\tSP");
         break;
 
     case 0x3c:
-        sprintf(out, "INR\tA");
+        sprintf(instr, "INR\tA");
         break;
 
     case 0x3d:
-        sprintf(out, "DCR\tA");
+        sprintf(instr, "DCR\tA");
         break;
 
     case 0x3e:
-        sprintf(out, "MVI\tA,#$%02x", op[1]);
+        sprintf(instr, "MVI\tA,#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0x3f:
-        sprintf(out, "CMC");
+        sprintf(instr, "CMC");
         break;
 
     case 0x40:
-        sprintf(out, "MOV\tB,B");
+        sprintf(instr, "MOV\tB,B");
         break;
 
     case 0x41:
-        sprintf(out, "MOV\tB,C");
+        sprintf(instr, "MOV\tB,C");
         break;
 
     case 0x42:
-        sprintf(out, "MOV\tB,D");
+        sprintf(instr, "MOV\tB,D");
         break;
 
     case 0x43:
-        sprintf(out, "MOV\tB,E");
+        sprintf(instr, "MOV\tB,E");
         break;
 
     case 0x44:
-        sprintf(out, "MOV\tB,H");
+        sprintf(instr, "MOV\tB,H");
         break;
 
     case 0x45:
-        sprintf(out, "MOV\tB,L");
+        sprintf(instr, "MOV\tB,L");
         break;
 
     case 0x46:
-        sprintf(out, "MOV\tB,M");
+        sprintf(instr, "MOV\tB,M");
         break;
 
     case 0x47:
-        sprintf(out, "MOV\tB,A");
+        sprintf(instr, "MOV\tB,A");
         break;
 
     case 0x48:
-        sprintf(out, "MOV\tC,B");
+        sprintf(instr, "MOV\tC,B");
         break;
 
     case 0x49:
-        sprintf(out, "MOV\tC,C");
+        sprintf(instr, "MOV\tC,C");
         break;
 
     case 0x4a:
-        sprintf(out, "MOV\tC,D");
+        sprintf(instr, "MOV\tC,D");
         break;
 
     case 0x4b:
-        sprintf(out, "MOV\tC,E");
+        sprintf(instr, "MOV\tC,E");
         break;
     
     case 0x4c:
-        sprintf(out, "MOV\tC,H");
+        sprintf(instr, "MOV\tC,H");
         break;
 
     case 0x4d:
-        sprintf(out, "MOV\tC,L");
+        sprintf(instr, "MOV\tC,L");
         break;
 
     case 0x4e:
-        sprintf(out, "MOV\tC,M");
+        sprintf(instr, "MOV\tC,M");
         break;
 
     case 0x4f:
-        sprintf(out, "MOV\tC,A");
+        sprintf(instr, "MOV\tC,A");
         break;
 
     case 0x50:
-        sprintf(out, "MOV\tD,B");
+        sprintf(instr, "MOV\tD,B");
         break;
         
     case 0x51:
-        sprintf(out, "MOV\tD,C");
+        sprintf(instr, "MOV\tD,C");
         break;
 
     case 0x52:
-        sprintf(out, "MOV\tD,D");
+        sprintf(instr, "MOV\tD,D");
         break;
 
     case 0x53:
-        sprintf(out, "MOV\tD,E");
+        sprintf(instr, "MOV\tD,E");
         break;
 
     case 0x54:
-        sprintf(out, "MOV\tD,H");
+        sprintf(instr, "MOV\tD,H");
         break;
 
     case 0x55:
-        sprintf(out, "MOV\tD,L");
+        sprintf(instr, "MOV\tD,L");
         break;
 
     case 0x56:
-        sprintf(out, "MOV\tD,M");
+        sprintf(instr, "MOV\tD,M");
         break;
 
     case 0x57:
-        sprintf(out, "MOV\tD,A");    
+        sprintf(instr, "MOV\tD,A");    
         break;
 
     case 0x58:
-        sprintf(out, "MOV\tE,B");
+        sprintf(instr, "MOV\tE,B");
         break;
 
     case 0x59:
-        sprintf(out, "MOV\tE,C");    
+        sprintf(instr, "MOV\tE,C");    
         break;
 
     case 0x5a:
-        sprintf(out, "MOV\tE,D");    
+        sprintf(instr, "MOV\tE,D");    
         break;
 
     case 0x5b:
-        sprintf(out, "MOV\tE,E");    
+        sprintf(instr, "MOV\tE,E");    
         break;
 
     case 0x5c:
-        sprintf(out, "MOV\tE,H");    
+        sprintf(instr, "MOV\tE,H");    
         break;
 
     case 0x5d:
-        sprintf(out, "MOV\tE,L");    
+        sprintf(instr, "MOV\tE,L");    
         break;
 
     case 0x5e:
-        sprintf(out, "MOV\tE,M");    
+        sprintf(instr, "MOV\tE,M");    
         break;
 
     case 0x5f:
-        sprintf(out, "MOV\tE,A");    
+        sprintf(instr, "MOV\tE,A");    
         break;
 
     case 0x60:
-        sprintf(out, "MOV\tH,B");    
+        sprintf(instr, "MOV\tH,B");    
         break;
 
     case 0x61:
-        sprintf(out, "MOV\tH,C");    
+        sprintf(instr, "MOV\tH,C");    
         break;
 
     case 0x62:
-        sprintf(out, "MOV\tH,D");    
+        sprintf(instr, "MOV\tH,D");    
         break;
 
     case 0x63:
-        sprintf(out, "MOV\tH,E");    
+        sprintf(instr, "MOV\tH,E");    
         break;
 
     case 0x64:
-        sprintf(out, "MOV\tH,H");    
+        sprintf(instr, "MOV\tH,H");    
         break;
 
     case 0x65:
-        sprintf(out, "MOV\tH,L");    
+        sprintf(instr, "MOV\tH,L");    
         break;
 
     case 0x66:
-        sprintf(out, "MOV\tH,M");    
+        sprintf(instr, "MOV\tH,M");    
         break;
 
     case 0x67:
-        sprintf(out, "MOV\tH,A");    
+        sprintf(instr, "MOV\tH,A");    
         break;
 
     case 0x68:
-        sprintf(out, "MOV\tL,B");    
+        sprintf(instr, "MOV\tL,B");    
         break;
 
     case 0x69:
-        sprintf(out, "MOV\tL,C");
+        sprintf(instr, "MOV\tL,C");
         break;
 
     case 0x6a:
-        sprintf(out, "MOV\tL,D");    
+        sprintf(instr, "MOV\tL,D");    
         break;
 
     case 0x6b:
-        sprintf(out, "MOV\tL,E");    
+        sprintf(instr, "MOV\tL,E");    
         break;
 
     case 0x6c:
-        sprintf(out, "MOV\tL,H");    
+        sprintf(instr, "MOV\tL,H");    
         break;
 
     case 0x6d:
-        sprintf(out, "MOV\tL,L");    
+        sprintf(instr, "MOV\tL,L");    
         break;
 
     case 0x6e:
-        sprintf(out, "MOV\tL,M");    
+        sprintf(instr, "MOV\tL,M");    
         break;
 
     case 0x6f:
-        sprintf(out, "MOV\tL,A");    
+        sprintf(instr, "MOV\tL,A");    
         break;
 
     case 0x70:
-        sprintf(out, "MOV\tM,B");
+        sprintf(instr, "MOV\tM,B");
         break;
 
     case 0x71:
-        sprintf(out, "MOV\tM,C");    
+        sprintf(instr, "MOV\tM,C");    
         break;
 
     case 0x72:
-        sprintf(out, "MOV\tM,D");    
+        sprintf(instr, "MOV\tM,D");    
         break;
 
     case 0x73:
-        sprintf(out, "MOV\tM,E");    
+        sprintf(instr, "MOV\tM,E");    
         break;
 
     case 0x74:
-        sprintf(out, "MOV\tM,H");    
+        sprintf(instr, "MOV\tM,H");    
         break;
 
     case 0x75:
-        sprintf(out, "MOV\tM,L");    
+        sprintf(instr, "MOV\tM,L");    
         break;
 
     case 0x76:
-        sprintf(out, "HLT");
+        sprintf(instr, "HLT");
         break;
 
     case 0x77:
-        sprintf(out, "MOV\tM,A");    
+        sprintf(instr, "MOV\tM,A");    
         break;
 
     case 0x78:
-        sprintf(out, "MOV\tA,B");    
+        sprintf(instr, "MOV\tA,B");    
         break;
 
     case 0x79:
-        sprintf(out, "MOV\tA,C");    
+        sprintf(instr, "MOV\tA,C");    
         break;
 
     case 0x7a:
-        sprintf(out, "MOV\tA,D");    
+        sprintf(instr, "MOV\tA,D");    
         break;
 
     case 0x7b:
-        sprintf(out, "MOV\tA,E");    
+        sprintf(instr, "MOV\tA,E");    
         break;
 
     case 0x7c:
-        sprintf(out, "MOV\tA,H");    
+        sprintf(instr, "MOV\tA,H");    
         break;
 
     case 0x7d:
-        sprintf(out, "MOV\tA,L");    
+        sprintf(instr, "MOV\tA,L");    
         break;
 
     case 0x7e:
-        sprintf(out, "MOV\tA,M");    
+        sprintf(instr, "MOV\tA,M");    
         break;
 
     case 0x7f:
-        sprintf(out, "MOV\tA,A");    
+        sprintf(instr, "MOV\tA,A");    
         break;
 
     case 0x80:
-        sprintf(out, "ADD\tB");    
+        sprintf(instr, "ADD\tB");    
         break;
 
     case 0x81:
-        sprintf(out, "ADD\tC");
+        sprintf(instr, "ADD\tC");
         break;
 
     case 0x82:
-        sprintf(out, "ADD\tD");    
+        sprintf(instr, "ADD\tD");    
         break;
 
     case 0x83:
-        sprintf(out, "ADD\tE");    
+        sprintf(instr, "ADD\tE");    
         break;
 
     case 0x84:
-        sprintf(out, "ADD\tH");    
+        sprintf(instr, "ADD\tH");    
         break;
 
     case 0x85:
-        sprintf(out, "ADD\tL");    
+        sprintf(instr, "ADD\tL");    
         break;
 
     case 0x86:
-        sprintf(out, "ADD\tM");    
+        sprintf(instr, "ADD\tM");    
         break;
 
     case 0x87:
-        sprintf(out, "ADD\tA");    
+        sprintf(instr, "ADD\tA");    
         break;
 
     case 0x88:
-        sprintf(out, "ADC\tB");    
+        sprintf(instr, "ADC\tB");    
         break;
 
     case 0x89:
-        sprintf(out, "ADC\tC");    
+        sprintf(instr, "ADC\tC");    
         break;
 
     case 0x8a:
-        sprintf(out, "ADC\tD");    
+        sprintf(instr, "ADC\tD");    
         break;
 
     case 0x8b:
-        sprintf(out, "ADC\tE");    
+        sprintf(instr, "ADC\tE");    
         break;
 
     case 0x8c:
-        sprintf(out, "ADC\tH");    
+        sprintf(instr, "ADC\tH");    
         break;
 
     case 0x8d:
-        sprintf(out, "ADC\tL");    
+        sprintf(instr, "ADC\tL");    
         break;
 
     case 0x8e:
-        sprintf(out, "ADC\tM");    
+        sprintf(instr, "ADC\tM");    
         break;
 
     case 0x8f:
-        sprintf(out, "ADC\tA");    
+        sprintf(instr, "ADC\tA");    
         break;
 
     case 0x90:
-        sprintf(out, "SUB\tB");    
+        sprintf(instr, "SUB\tB");    
         break;
 
     case 0x91:
-        sprintf(out, "SUB\tC");    
+        sprintf(instr, "SUB\tC");    
         break;
 
     case 0x92:
-        sprintf(out, "SUB\tD");    
+        sprintf(instr, "SUB\tD");    
         break;
 
     case 0x93:
-        sprintf(out, "SUB\tE");    
+        sprintf(instr, "SUB\tE");    
         break;
 
     case 0x94:
-        sprintf(out, "SUB\tH");    
+        sprintf(instr, "SUB\tH");    
         break;
 
     case 0x95:
-        sprintf(out, "SUB\tL");    
+        sprintf(instr, "SUB\tL");    
         break;
 
     case 0x96:
-        sprintf(out, "SUB\tM");    
+        sprintf(instr, "SUB\tM");    
         break;
 
     case 0x97:
-        sprintf(out, "SUB\tA");    
+        sprintf(instr, "SUB\tA");    
         break;
 
     case 0x98:
-        sprintf(out, "SBB\tB");    
+        sprintf(instr, "SBB\tB");    
         break;
 
     case 0x99:
-        sprintf(out, "SBB\tC");    
+        sprintf(instr, "SBB\tC");    
         break;
 
     case 0x9a:
-        sprintf(out, "SBB\tD");    
+        sprintf(instr, "SBB\tD");    
         break;
 
     case 0x9b:
-        sprintf(out, "SBB\tE");    
+        sprintf(instr, "SBB\tE");    
         break;
 
     case 0x9c:
-        sprintf(out, "SBB\tH");    
+        sprintf(instr, "SBB\tH");    
         break;
 
     case 0x9d:
-        sprintf(out, "SBB\tL");    
+        sprintf(instr, "SBB\tL");    
         break;
 
     case 0x9e:
-        sprintf(out, "SBB\tM");    
+        sprintf(instr, "SBB\tM");    
         break;
 
     case 0x9f:
-        sprintf(out, "SBB\tA");    
+        sprintf(instr, "SBB\tA");    
         break;
 
     case 0xa0:
-        sprintf(out, "ANA\tB");    
+        sprintf(instr, "ANA\tB");    
         break;
 
     case 0xa1:
-        sprintf(out, "ANA\tC");    
+        sprintf(instr, "ANA\tC");    
         break;
 
     case 0xa2:
-        sprintf(out, "ANA\tD");    
+        sprintf(instr, "ANA\tD");    
         break;
 
     case 0xa3:
-        sprintf(out, "ANA\tE");    
+        sprintf(instr, "ANA\tE");    
         break;
 
     case 0xa4:
-        sprintf(out, "ANA\tH");    
+        sprintf(instr, "ANA\tH");    
         break;
 
     case 0xa5:
-        sprintf(out, "ANA\tL");    
+        sprintf(instr, "ANA\tL");    
         break;
 
     case 0xa6:
-        sprintf(out, "ANA\tM");    
+        sprintf(instr, "ANA\tM");    
         break;
 
     case 0xa7:
-        sprintf(out, "ANA\tA");    
+        sprintf(instr, "ANA\tA");    
         break;
 
     case 0xa8:
-        sprintf(out, "XRA\tB");    
+        sprintf(instr, "XRA\tB");    
         break;
 
     case 0xa9:
-        sprintf(out, "XRA\tC");    
+        sprintf(instr, "XRA\tC");    
         break;
 
     case 0xaa:
-        sprintf(out, "XRA\tD");    
+        sprintf(instr, "XRA\tD");    
         break;
 
     case 0xab:
-        sprintf(out, "XRA\tE");    
+        sprintf(instr, "XRA\tE");    
         break;
 
     case 0xac:
-        sprintf(out, "XRA\tH");    
+        sprintf(instr, "XRA\tH");    
         break;
 
     case 0xad:
-        sprintf(out, "XRA\tL");    
+        sprintf(instr, "XRA\tL");    
         break;
 
     case 0xae:
-        sprintf(out, "XRA\tM");    
+        sprintf(instr, "XRA\tM");    
         break;
 
     case 0xaf:
-        sprintf(out, "XRA\tA");    
+        sprintf(instr, "XRA\tA");    
         break;
 
     case 0xb0:
-        sprintf(out, "ORA\tB");    
+        sprintf(instr, "ORA\tB");    
         break;
 
     case 0xb1:
-        sprintf(out, "ORA\tC");    
+        sprintf(instr, "ORA\tC");    
         break;
 
     case 0xb2:
-        sprintf(out, "ORA\tD");    
+        sprintf(instr, "ORA\tD");    
         break;
 
     case 0xb3:
-        sprintf(out, "ORA\tE");    
+        sprintf(instr, "ORA\tE");    
         break;
 
     case 0xb4:
-        sprintf(out, "ORA\tH");    
+        sprintf(instr, "ORA\tH");    
         break;
 
     case 0xb5:
-        sprintf(out, "ORA\tL");    
+        sprintf(instr, "ORA\tL");    
         break;
 
     case 0xb6:
-        sprintf(out, "ORA\tM");    
+        sprintf(instr, "ORA\tM");    
         break;
 
     case 0xb7:
-        sprintf(out, "ORA\tA");    
+        sprintf(instr, "ORA\tA");    
         break;
 
     case 0xb8:
-        sprintf(out, "CMP\tB");    
+        sprintf(instr, "CMP\tB");    
         break;
 
     case 0xb9:
-        sprintf(out, "CMP\tC");    
+        sprintf(instr, "CMP\tC");    
         break;
 
     case 0xba:
-        sprintf(out, "CMP\tD");    
+        sprintf(instr, "CMP\tD");    
         break;
 
     case 0xbb:
-        sprintf(out, "CMP\tE");    
+        sprintf(instr, "CMP\tE");    
         break;
 
     case 0xbc:
-        sprintf(out, "CMP\tH");    
+        sprintf(instr, "CMP\tH");    
         break;
 
     case 0xbd:
-        sprintf(out, "CMP\tL");    
+        sprintf(instr, "CMP\tL");    
         break;
 
     case 0xbe:
-        sprintf(out, "CMP\tM");    
+        sprintf(instr, "CMP\tM");    
         break;
 
     case 0xbf:
-        sprintf(out, "CMP\tA");    
+        sprintf(instr, "CMP\tA");    
         break;
 
     case 0xc0:
-        sprintf(out, "RNZ");    
+        sprintf(instr, "RNZ");    
         break;
 
     case 0xc1:
-        sprintf(out, "POP\tB");    
+        sprintf(instr, "POP\tB");    
         break;
 
     case 0xc2:
-        sprintf(out, "JNZ\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "JNZ\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0xc3:
-        sprintf(out, "JMP\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "JMP\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0xc4:
-        sprintf(out, "CNZ\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "CNZ\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0xc5:
-        sprintf(out, "PUSH\tB");    
+        sprintf(instr, "PUSH\tB");    
         break;
 
     case 0xc6:
-        sprintf(out, "ADI\t#$%02x", op[1]);
+        sprintf(instr, "ADI\t#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0xc7:
-        sprintf(out, "RST\t0");    
+        sprintf(instr, "RST\t0");    
         break;
 
     case 0xc8:
-        sprintf(out, "RZ");    
+        sprintf(instr, "RZ");    
         break;
 
     case 0xc9:
-        sprintf(out, "RET");    
+        sprintf(instr, "RET");    
         break;
 
     case 0xca:
-        sprintf(out, "JZ\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "JZ\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0xcb:
-        sprintf(out, "[0xcb not implemented]");    
+        sprintf(instr, "[0xcb not implemented]");    
         break;
 
     case 0xcc:
-        sprintf(out, "CZ\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "CZ\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0xcd:
-        sprintf(out, "CALL\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "CALL\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0xce:
-        sprintf(out, "ACI\t#$%02x", op[1]);
+        sprintf(instr, "ACI\t#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0xcf:
-        sprintf(out, "RST\t1");    
+        sprintf(instr, "RST\t1");    
         break;
 
     case 0xd0:
-        sprintf(out, "RNC");    
+        sprintf(instr, "RNC");    
         break;
 
     case 0xd1:
-        sprintf(out, "POP\tD");    
+        sprintf(instr, "POP\tD");    
         break;
 
     case 0xd2:
-        sprintf(out, "JNC\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "JNC\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0xd3:
-        sprintf(out, "OUT\t#$%02x", op[1]);
+        sprintf(instr, "OUT\t#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0xd4:
-        sprintf(out, "CNC\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "CNC\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0xd5:
-        sprintf(out, "PUSH\tD");    
+        sprintf(instr, "PUSH\tD");    
         break;
 
     case 0xd6:
-        sprintf(out, "SUI\t#$%02x", op[1]);
+        sprintf(instr, "SUI\t#$%02x", op[1]);
         opsize = 2;
         break;
 
     case 0xd7:
-        sprintf(out, "RST\t2");    
+        sprintf(instr, "RST\t2");    
         break;
 
     case 0xd8:
-        sprintf(out, "RC");    
+        sprintf(instr, "RC");    
         break;
 
     case 0xd9:
-        sprintf(out, "[0xd9 not implemented]");
+        sprintf(instr, "[0xd9 not implemented]");
         break;
 
     case 0xda:
-        sprintf(out, "JC\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "JC\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
 
     case 0xdb:
-        sprintf(out, "IN\t#$%02x", op[1]);
+        sprintf(instr, "IN\t#$%02x", op[1]);
         opsize = 2;
         break;
     
     case 0xdc:
-        sprintf(out, "CC\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "CC\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
     
     case 0xdd:
-        sprintf(out, "[0xdd not implemented]");
+        sprintf(instr, "[0xdd not implemented]");
         break;
     
     case 0xde:
-        sprintf(out, "SBI\t#$%02x", op[1]);
+        sprintf(instr, "SBI\t#$%02x", op[1]);
         opsize = 2;
         break;
     
     case 0xdf:
-        sprintf(out, "RST\t3");
+        sprintf(instr, "RST\t3");
         break;
     
     case 0xe0:
-        sprintf(out, "RPO");
+        sprintf(instr, "RPO");
         break;
     
     case 0xe1:
-        sprintf(out, "POP\tH");
+        sprintf(instr, "POP\tH");
         break;
     
     case 0xe2:
-        sprintf(out, "JPO\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "JPO\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
     
     case 0xe3:
-        sprintf(out, "XTHL");
+        sprintf(instr, "XTHL");
         break;
     
     case 0xe4:
-        sprintf(out, "CPO\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "CPO\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
     
     case 0xe5:
-        sprintf(out, "PUSH\tH");
+        sprintf(instr, "PUSH\tH");
         break;
     
     case 0xe6:
-        sprintf(out, "ANI\t#$%02x", op[1]);
+        sprintf(instr, "ANI\t#$%02x", op[1]);
         opsize = 2;
         break;
     
     case 0xe7:
-        sprintf(out, "RST\t4");
+        sprintf(instr, "RST\t4");
         break;
     
     case 0xe8:
-        sprintf(out, "RPE");
+        sprintf(instr, "RPE");
         break;
     
     case 0xe9:
-        sprintf(out, "PCHL");
+        sprintf(instr, "PCHL");
         break;
     
     case 0xea:
-        sprintf(out, "JPE\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "JPE\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
     
     case 0xeb:
-        sprintf(out, "XCHG");
+        sprintf(instr, "XCHG");
         break;
     
     case 0xec:
-        sprintf(out, "CPE\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "CPE\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
     
     case 0xed:
-        sprintf(out, "[0xed not implemented]");
+        sprintf(instr, "[0xed not implemented]");
         break;
     
     case 0xee:
-        sprintf(out, "XRI\t#$%02x", op[1]);
+        sprintf(instr, "XRI\t#$%02x", op[1]);
         opsize = 2;
         break;
     
     case 0xef:
-        sprintf(out, "RST\t5");
+        sprintf(instr, "RST\t5");
         break;
     
     case 0xf0:
-        sprintf(out, "RP");
+        sprintf(instr, "RP");
         break;
     
     case 0xf1:
-        sprintf(out, "POP\tPSW");
+        sprintf(instr, "POP\tPSW");
         break;
     
     case 0xf2:
-        sprintf(out, "JP\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "JP\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
     
     case 0xf3:
-        sprintf(out, "DI");
+        sprintf(instr, "DI");
         break;
     
     case 0xf4:
-        sprintf(out, "CP\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "CP\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
     
     case 0xf5:
-        sprintf(out, "PUSH\tPSW");
+        sprintf(instr, "PUSH\tPSW");
         break;
     
     case 0xf6:
-        sprintf(out, "ORI\t#$%02x", op[1]);
+        sprintf(instr, "ORI\t#$%02x", op[1]);
         opsize = 2;
         break;
     
     case 0xf7:
-        sprintf(out, "RST\t6");
+        sprintf(instr, "RST\t6");
         break;
     
     case 0xf8:
-        sprintf(out, "RM");
+        sprintf(instr, "RM");
         break;
     
     case 0xf9:
-        sprintf(out, "SPHL");
+        sprintf(instr, "SPHL");
         break;
     
     case 0xfa:
-        sprintf(out, "JM\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "JM\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
     
     case 0xfb:
-        sprintf(out, "EI");
+        sprintf(instr, "EI");
         break;
     
     case 0xfc:
-        sprintf(out, "CM\t$%02x%02x", op[2], op[1]);
+        sprintf(instr, "CM\t$%02x%02x", op[2], op[1]);
         opsize = 3;
         break;
     
     case 0xfd:
-        sprintf(out, "[0xfd not implemented]");
+        sprintf(instr, "[0xfd not implemented]");
         break;
     
     case 0xfe:
-        sprintf(out, "CPI\t#$%02x", op[1]);
+        sprintf(instr, "CPI\t#$%02x", op[1]);
         opsize = 2;
         break;
     
     case 0xff:
-        sprintf(out, "RST 7");
+        sprintf(instr, "RST 7");
         break;
 
     default:
-        sprintf(out, "default");
+        sprintf(instr, "default");
         break;
     }
-
-    sprintf(out, "\n");
+    strcpy(out, instr);
+    strcat(out, "\n");
     return opsize;
 }

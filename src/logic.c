@@ -56,15 +56,15 @@ bool EmulateLogic(EmulatorState *state, uint8_t *op)
         SET_FLAG_C(~FLAG_C);
         break;
     case 0xe6: // ANI D8
-        A = A & DATA_BYTE;
+        A &= DATA_BYTE;
         IMM_END;
         break;
     case 0xee: // XRI D8
-        A = A ^ DATA_BYTE;
+        A ^= DATA_BYTE;
         IMM_END;
         break;
     case 0xf6: // ORI D8
-        A = A | DATA_BYTE;
+        A |= DATA_BYTE;
         IMM_END;
         break;
     case 0xfe: // CPI D8
@@ -105,15 +105,15 @@ bool RegularLogic(EmulatorState *state, uint8_t *op)
 
     switch((*op - 0xa0) / 8) {
     case 0: // ANA
-        A = A & term;
+        A &= term;
         REG_END;
         break;
     case 1: // XRA
-        A = A ^ term;
+        A ^= term;
         REG_END;
         break;
     case 2: // ORA
-        A = A | term;
+        A |= term;
         REG_END;
         break;
     case 3: // CMP
