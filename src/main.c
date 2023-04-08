@@ -14,9 +14,9 @@ int main(int argc, char *argv[])
     int filesize;
     uint8_t *memory;
     bool printState;
-    char dbgstrs[DEBUG_FRAME_LENGTH][256] = {0};
+    char dbgstrs[DEBUG_FRAME_LENGTH][64] = {0};
     EmulatorState state_;
-    char disasmOut[256];
+    char disasmOut[64];
 
     EmulatorState *state = &state_;
     int  const memsize   = 1 << 16;

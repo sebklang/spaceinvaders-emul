@@ -7,13 +7,10 @@
 // This function could be a lot shorter and neater, but i cba
 int DisasmSingleInstruction(char *out, uint8_t *buffer, int pc)
 {
-    char instr[32];
+    char instr[64];
     uint8_t *op = buffer + pc;
     int opsize = 1;
-    #define ADR_OP_STR "%04x\t%02x\t"
-    sprintf(out, ADR_OP_STR, pc, *op);
-    out += sizeof ADR_OP_STR - 1;
-    #undef ADR_OP_STR
+    sprintf(out, "%04x\t%02x\t", pc, *op);
 
     switch (*op) {
     case 0x00:
@@ -1088,7 +1085,7 @@ int DisasmSingleInstruction(char *out, uint8_t *buffer, int pc)
         sprintf(instr, "default");
         break;
     }
-    strcpy(out, instr);
+    strcat(out, instr);
     strcat(out, "\n");
     return opsize;
 }
