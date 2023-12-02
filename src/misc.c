@@ -35,3 +35,4 @@ bool EmulateMisc(EmulatorState *state, uint8_t *op)
 
     return true;
 }
+

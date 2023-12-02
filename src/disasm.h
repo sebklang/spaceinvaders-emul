@@ -5,6 +5,16 @@
 #include <stdint.h>
 
 #define FILE_ENDING ".asm"
-int DisasmSingleInstruction(char *, uint8_t *, int);
+
+#ifdef __cplusplus
+extern "C" {
+#endif
+
+int DisasmSingleInstruction(const char *, uint8_t *, int);
+
+#ifdef __cplusplus
+}
+#endif
 
 #endif
+

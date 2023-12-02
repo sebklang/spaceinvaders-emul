@@ -8,12 +8,11 @@
 
 #define DEBUG_FRAME_LENGTH 10
 
-int main(int argc, char *argv[])
+int EmulMain(int argc, char *argv[])
 {
     FILE *file;
     int filesize;
     uint8_t *memory;
-    bool printState;
     char  dbgstrs[DEBUG_FRAME_LENGTH][64] = {0};
     char *dbgptrs[DEBUG_FRAME_LENGTH];
     EmulatorState state_;
@@ -21,9 +20,10 @@ int main(int argc, char *argv[])
 
     EmulatorState *state = &state_;
     int  const memsize   = 1 << 16;
-    char const *const fn = "bin/invaders.rom";
+    char const *const filename = "bin/invaders.rom";
     DebugFrame dbg_ = {(char **) dbgptrs, DEBUG_FRAME_LENGTH, 0};
     DebugFrame *dbg = &dbg_;
+    bool printState = true;
 
     // Initialize dbgptrs. (Do not use dbg_ or dbg before this)
     for (int i = 0; i < DEBUG_FRAME_LENGTH; i++) {
@@ -31,8 +31,8 @@ int main(int argc, char *argv[])
     }
 
     // Initialize memory from ROM file
-    if ((file = fopen(fn, "rb")) == NULL) {
-        printf("Failed to open file %s for reading. Exiting...", fn);
+    if ((file = fopen(filename, "rb")) == NULL) {
+        printf("Failed to open file %s for reading. Exiting...", filename);
         return 1;
     }
     fseek(file, 0L, SEEK_END);
@@ -44,11 +44,10 @@ int main(int argc, char *argv[])
     // -----
 
     InitEmulator(state, memory, memsize, NULL, NULL);
-    printState = true;
 
     while (PC < MEMSIZE) {
         // Output
-        if (printState) {
+        if (printState) { // Starts true
             for (int i = 0; i < 10; i++) printf("\n");
             printf("Current state:\n"
             "A = %02x\nBC = %02x %02x\n"
@@ -110,7 +109,8 @@ int main(int argc, char *argv[])
             }
         }
     }
-
+    
     printf("Reached end of memory.\n");
     return 0;
 }
+

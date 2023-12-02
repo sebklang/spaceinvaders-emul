@@ -28,7 +28,15 @@ typedef struct EmulatorState {
     OutputHandler outputHandler;
 } EmulatorState;
 
-void InitEmulator(EmulatorState *state, uint8_t *memory, memsize_t memsize, InputHandler ih, OutputHandler oh);
-bool EmulateInstruction(EmulatorState *state);
+#ifdef __cplusplus
+extern "C" {
+#endif
+    void InitEmulator(EmulatorState* state, uint8_t* memory,
+            memsize_t memsize, InputHandler ih, OutputHandler oh);
+    bool EmulateInstruction(EmulatorState* state);
+#ifdef __cplusplus
+}
+#endif
 
 #endif
+

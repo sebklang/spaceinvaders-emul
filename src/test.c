@@ -75,3 +75,4 @@ void Quit(void)
 
     SDL_Quit();
 }
+

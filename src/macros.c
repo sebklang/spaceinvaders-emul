@@ -8,3 +8,4 @@ uint8_t Parity(uint8_t x)
     }
     return count % 2 == 0;
 }
+

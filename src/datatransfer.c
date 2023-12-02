@@ -114,7 +114,9 @@ bool RegularDataTransfer(EmulatorState *state, uint8_t *op)
     case 3: dest = &E; break;
     case 4: dest = &H; break;
     case 5: dest = &L; break;
-    case 6: dest = GetMem(state, HL); break;
+    case 6:
+        SetMem(state, HL, src);
+        return true;
     case 7: dest = &A; break;
     default:
         printf("MOV impossible destination register\n");
@@ -124,3 +126,4 @@ bool RegularDataTransfer(EmulatorState *state, uint8_t *op)
     *dest = src;
     return true;
 }
+

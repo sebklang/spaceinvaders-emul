@@ -132,3 +132,4 @@ bool EmulateInstruction(EmulatorState *state)
     
     return returnCode;
 }
+

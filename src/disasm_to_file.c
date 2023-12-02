@@ -44,3 +44,4 @@ int main(int argc, char **argv)
     fclose(out);
     return EXIT_SUCCESS;
 }
+
