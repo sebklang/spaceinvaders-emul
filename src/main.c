@@ -8,7 +8,7 @@
 
 #define DEBUG_FRAME_LENGTH 10
 
-int EmulMain(int argc, char *argv[])
+int main(int argc, char *argv[])
 {
     FILE *file;
     int filesize;
@@ -74,6 +74,7 @@ int EmulMain(int argc, char *argv[])
         char inString[256];
         fgets(inString, 256, stdin);
         int numIter = 0;
+        long int dest;
 
         if (inString[0] == '\n') {
             numIter = 1;
@@ -92,6 +93,53 @@ int EmulMain(int argc, char *argv[])
         else if (strcmp(inString, "q\n") == 0) {
             printf("Exiting.\n");
             return 0;
+        }
+        else if (memcmp(inString, "gm ", 3) == 0 && (dest = strtol(inString[3], NULL, 16)) != 0) {
+            uint8_t *dataptr = GetMem(state, dest);
+            if (dataptr) {
+                printf("Memory @ %04x: %02x\n", dest, *dataptr);
+            }
+            else {
+                printf("Invalid address.\n");
+            }
+        }
+        else if (memcmp(inString, "gr ", 3) == 0) {
+            uint8_t *dataptr = NULL;
+            char *regstr = NULL;
+            switch (inString[3])
+            {
+            case 'B':
+            case 'b':
+                dataptr = GetMem(state, BC);
+                regstr = "BC";
+                break;
+            case 'D':
+            case 'd':
+                dataptr = GetMem(state, DE);
+                regstr = "DE";
+                break;
+            case 'H':
+            case 'h':
+                dataptr = GetMem(state, HL);
+                regstr = "HL";
+                break;
+            case 'S':
+            case 's':
+                dataptr = GetMem(state, SP);
+                regstr = "SP";
+                break;
+            case 'P':
+            case 'p':
+                dataptr = GetMem(state, PC);
+                regstr = "PC";
+                break;
+            default:
+                dataptr = NULL;
+                break;
+            }
+            if (dataptr && regstr) {
+                printf("Memory @ %s (%04x): %02x", regstr, dataptr, *dataptr);
+            }
         }
         else {
             numIter = atoi(inString);
