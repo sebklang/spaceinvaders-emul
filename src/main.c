@@ -151,7 +151,7 @@ int main(int argc, char *argv[])
 
         else if (memcmp(input, "gr ", 3) == 0) {
             char *regstr;
-            uint8_t *dataptr = StringToReg(state, &input[3], &regstr);
+            uint8_t *dataptr = StringToReg(state, input, &regstr);
             if (dataptr && regstr) {
                 uint16_t loc = dataptr - GetMem(state, 0);
                 printf("Memory @ %s (%04x): %02x\n", regstr, loc, *dataptr);
