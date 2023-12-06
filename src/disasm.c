@@ -1089,4 +1089,3 @@ int DisasmSingleInstruction(const char *out, uint8_t *buffer, int pc)
     strcat(out, "\n");
     return opsize;
 }
-

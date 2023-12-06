@@ -10,4 +10,3 @@ bool     SetMem(EmulatorState* state, uint16_t loc, uint8_t val);
 bool     SetMemDirect(EmulatorState* state, uint16_t loc, uint8_t val);
 
 #endif
-

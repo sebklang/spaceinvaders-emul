@@ -101,4 +101,3 @@ bool EmulateBranch(EmulatorState *state, uint8_t *op)
 
     return true;
 }
-
