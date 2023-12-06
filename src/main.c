@@ -94,7 +94,7 @@ int main(int argc, char *argv[])
             printf("Exiting.\n");
             return 0;
         }
-        else if (memcmp(inString, "gm ", 3) == 0 && (dest = strtol(inString[3], NULL, 16)) != 0) {
+        else if (memcmp(inString, "gm ", 3) == 0 && (dest = strtol(&inString[3], NULL, 16)) != 0) {
             uint8_t *dataptr = GetMem(state, dest);
             if (dataptr) {
                 printf("Memory @ %04x: %02x\n", dest, *dataptr);
@@ -138,7 +138,7 @@ int main(int argc, char *argv[])
                 break;
             }
             if (dataptr && regstr) {
-                printf("Memory @ %s (%04x): %02x", regstr, dataptr, *dataptr);
+                printf("Memory @ %s (%04x): %02x\n", regstr, dataptr, *dataptr);
             }
         }
         else {
