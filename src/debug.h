@@ -9,4 +9,3 @@ typedef struct DebugFrame {
 void WriteLnToFrame(DebugFrame *frame, EmulatorState *state);
 
 void PrintFrame(DebugFrame *frame);
-

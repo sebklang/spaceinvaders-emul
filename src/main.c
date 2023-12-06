@@ -8,6 +8,41 @@
 
 #define DEBUG_FRAME_LENGTH 10
 
+uint8_t *StringToReg(EmulatorState *state, char *input, char **regstr)
+{
+    switch (input[3])
+    {
+    case 'B':
+    case 'b':
+        *regstr = "BC";
+        return GetMem(state, BC);
+        break;
+    case 'D':
+    case 'd':
+        *regstr = "DE";
+        return GetMem(state, DE);
+        break;
+    case 'H':
+    case 'h':
+        *regstr = "HL";
+        return GetMem(state, HL);
+        break;
+    case 'S':
+    case 's':
+        *regstr = "SP";
+        return GetMem(state, SP);
+        break;
+    case 'P':
+    case 'p':
+        *regstr = "PC";
+        return GetMem(state, PC);
+        break;
+    default:
+        break;
+    }
+    return NULL;
+}
+
 int main(int argc, char *argv[])
 {
     FILE *file;
@@ -71,78 +106,60 @@ int main(int argc, char *argv[])
         printState = true;
 
         // Input
-        char inString[256];
-        fgets(inString, 256, stdin);
+        char input[256];
+        fgets(input, 256, stdin);
         int numIter = 0;
         long int dest;
 
-        if (inString[0] == '\n') {
+        if (input[0] == '\n') {
             numIter = 1;
         }
-        else if (strcmp(inString, "ps\n") == 0) {
+
+        else if (strcmp(input, "ps\n") == 0) {
             printf("--- Stack ---\nAddress | Value\n");
             for (int i = 0x23ff; i >= SP; i--) { // 0x2400 is specific to space invaders
                 printf("%04x    | %02x\n", i, *GetMem(state, i));
             }
             printf("--- End of stack ---\n");
         }
-        else if (strcmp(inString, "pf\n") == 0) {
+
+        else if (strcmp(input, "pf\n") == 0) {
             printf("Printing last up to %d executed instructions.\n", DEBUG_FRAME_LENGTH);
             PrintFrame(dbg);
         }
-        else if (strcmp(inString, "q\n") == 0) {
+
+        else if (strcmp(input, "q\n") == 0) {
             printf("Exiting.\n");
             return 0;
         }
-        else if (memcmp(inString, "gm ", 3) == 0 && (dest = strtol(&inString[3], NULL, 16)) != 0) {
-            uint8_t *dataptr = GetMem(state, dest);
-            if (dataptr) {
-                printf("Memory @ %04x: %02x\n", dest, *dataptr);
+
+        else if (memcmp(input, "gm ", 3) == 0) {
+            dest = strtol(&input[3], NULL, 16);
+            if (dest >= 0 && dest <= 0xffff) {
+                uint8_t *dataptr = GetMem(state, dest);
+                if (dataptr) {
+                    printf("Memory @ %04x: %02x\n", dest, *dataptr);
+                }
+                else {
+                    printf("Impossible error.\n");
+                }
             }
             else {
                 printf("Invalid address.\n");
             }
         }
-        else if (memcmp(inString, "gr ", 3) == 0) {
-            uint8_t *dataptr = NULL;
-            char *regstr = NULL;
-            switch (inString[3])
-            {
-            case 'B':
-            case 'b':
-                dataptr = GetMem(state, BC);
-                regstr = "BC";
-                break;
-            case 'D':
-            case 'd':
-                dataptr = GetMem(state, DE);
-                regstr = "DE";
-                break;
-            case 'H':
-            case 'h':
-                dataptr = GetMem(state, HL);
-                regstr = "HL";
-                break;
-            case 'S':
-            case 's':
-                dataptr = GetMem(state, SP);
-                regstr = "SP";
-                break;
-            case 'P':
-            case 'p':
-                dataptr = GetMem(state, PC);
-                regstr = "PC";
-                break;
-            default:
-                dataptr = NULL;
-                break;
-            }
+
+        else if (memcmp(input, "gr ", 3) == 0) {
+            char *regstr;
+            uint8_t *dataptr = StringToReg(state, &input[3], &regstr);
             if (dataptr && regstr) {
-                printf("Memory @ %s (%04x): %02x\n", regstr, dataptr, *dataptr);
+                uint16_t loc = dataptr - GetMem(state, 0);
+                printf("Memory @ %s (%04x): %02x\n", regstr, loc, *dataptr);
             }
         }
+
         else {
-            numIter = atoi(inString);
+            numIter = atoi(input);
         }
 
         if (numIter == 0) printState = false;
@@ -161,4 +178,3 @@ int main(int argc, char *argv[])
     printf("Reached end of memory.\n");
     return 0;
 }
-

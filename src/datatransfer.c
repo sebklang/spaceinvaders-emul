@@ -126,4 +126,3 @@ bool RegularDataTransfer(EmulatorState *state, uint8_t *op)
     *dest = src;
     return true;
 }
-

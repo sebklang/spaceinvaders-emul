@@ -17,4 +17,3 @@ int DisasmSingleInstruction(const char *, uint8_t *, int);
 #endif
 
 #endif
-

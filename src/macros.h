@@ -76,4 +76,3 @@
 uint8_t Parity(uint8_t x);
 
 #endif
-

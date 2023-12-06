@@ -142,4 +142,3 @@ bool RegularArithmetic(EmulatorState *state, uint8_t *op)
     SET_FLAGS_ZSP(A);
     return true;
 }
-

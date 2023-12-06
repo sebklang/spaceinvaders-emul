@@ -29,4 +29,3 @@ bool SetMem(EmulatorState *state, uint16_t loc, uint8_t val)
     _SetMem(loc, val);
     return true;
 }
-
