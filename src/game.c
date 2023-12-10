@@ -50,7 +50,7 @@ static bool Init(void) {
         return false;
     }
 
-    if ((window = SDL_CreateWindow("My SDL test", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN)) == NULL) {
+    if ((window = SDL_CreateWindow("Space Invaders", SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, WIDTH, HEIGHT, SDL_WINDOW_SHOWN)) == NULL) {
         printf("SDL_CreateWindow failed: %s", SDL_GetError());
         return false;
     }
@@ -84,19 +84,18 @@ static void Render(void)
     SDL_RenderPresent(renderer);
     rect.x++;
     */
-    static Uint8 color_i = 0;
+    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
-    for (int i = 0; i < WIDTH; i++) {
-        for (int j = 0; j < HEIGHT; j++) {
-            size_t pixelno = i * j;
+    for (int i = 0; i < HEIGHT; i++) {
+        for (int j = 0; j < WIDTH; j++) {
+            size_t pixelno = i * WIDTH + j;
             size_t byteno = pixelno / 8;
             size_t bitno = pixelno % 8;
             bool pixel_active = (raster[byteno] >> bitno) & 1;
             SDL_SetRenderDrawColor(renderer, 0, pixel_active ? 255 : 0, 0, 255);
-            SDL_RenderDrawPoint(renderer, i, j);
+            SDL_RenderDrawPoint(renderer, j, i);
         }
     }
-    color_i++;
     SDL_RenderPresent(renderer);
 }
 
