@@ -43,7 +43,7 @@ uint8_t *StringToReg(EmulatorState *state, char *input, char **regstr)
     return NULL;
 }
 
-int main(int argc, char *argv[])
+int main(int argc, char **argv)
 {
     FILE *file;
     int filesize;
