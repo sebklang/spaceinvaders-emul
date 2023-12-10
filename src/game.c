@@ -10,7 +10,7 @@ static SDL_Surface *surface = NULL;
 static SDL_Window *window = NULL;
 static SDL_Renderer *renderer = NULL;
 static uint8_t *memory;
-static uint8_t *raster; // size is width * height (57344) bytes
+static uint8_t *raster; // size is width * height @ 1bpp = 7168 bytes
 
 static bool Init(void);
 static void Update(EmulatorState *state);
@@ -114,4 +114,3 @@ static void Quit(void)
 
     SDL_Quit();
 }
-
