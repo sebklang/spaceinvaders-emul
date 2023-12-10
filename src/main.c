@@ -111,10 +111,12 @@ int main(int argc, char *argv[])
         int numIter = 0;
         long int dest;
 
+        // Enter
         if (input[0] == '\n') {
             numIter = 1;
         }
 
+        // Print stack
         else if (strcmp(input, "ps\n") == 0) {
             printf("--- Stack ---\nAddress | Value\n");
             for (int i = 0x23ff; i >= SP; i--) { // 0x2400 is specific to space invaders
@@ -123,16 +125,19 @@ int main(int argc, char *argv[])
             printf("--- End of stack ---\n");
         }
 
+        // Print frame
         else if (strcmp(input, "pf\n") == 0) {
             printf("Printing last up to %d executed instructions.\n", DEBUG_FRAME_LENGTH);
             PrintFrame(dbg);
         }
 
+        // Quit
         else if (strcmp(input, "q\n") == 0) {
             printf("Exiting.\n");
             return 0;
         }
 
+        // Get memory
         else if (memcmp(input, "gm ", 3) == 0) {
             dest = strtol(&input[3], NULL, 16);
             if (dest >= 0 && dest <= 0xffff) {
@@ -149,11 +154,12 @@ int main(int argc, char *argv[])
             }
         }
 
+        // Get memory by register
         else if (memcmp(input, "gr ", 3) == 0) {
             char *regstr;
             uint8_t *dataptr = StringToReg(state, input, &regstr);
             if (dataptr && regstr) {
-                uint16_t loc = dataptr - GetMem(state, 0);
+                uint16_t loc = dataptr - MEM; // TODO? Questionable pointer arithmetic and implicit downcast
                 printf("Memory @ %s (%04x): %02x\n", regstr, loc, *dataptr);
             }
         }
