@@ -17,6 +17,8 @@ static void Update(EmulatorState *state);
 static void Render(void);
 static void Quit(void);
 
+static bool showedError = false;
+
 int main(int argc, char *argv[])
 {
     if (!Init()) return 1;
@@ -67,8 +69,9 @@ static bool Init(void) {
 
 static void Update(EmulatorState *state) {
     for (int i = 0; i < 100000; i++) {
-        if (!EmulateInstruction(state)) {
-            printf("Fatal error!");
+        if (!EmulateInstruction(state) && !showedError) {
+            SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Fatal error!", "Fatal error!", window);
+            showedError = true;
         }
     }
 }
