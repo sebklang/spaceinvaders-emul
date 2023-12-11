@@ -3,6 +3,10 @@
 #include <SDL2/SDL.h>
 #include "emulator.h"
 
+#ifdef _WIN32
+#include <windows.h>
+#endif
+
 #define WIDTH 224
 #define HEIGHT 256
 
@@ -17,16 +21,60 @@ static void Update(EmulatorState *state);
 static void Render(void);
 static void Quit(void);
 
-int main(int argc, char *argv[])
+#ifdef _WIN32
+static LRESULT CALLBACK WindowProc(HWND hwnd, UINT uMsg, WPARAM wParam, LPARAM lParam)
 {
+    switch (uMsg)
+    {
+
+    }
+}
+#endif
+
+#ifdef _WIN32
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, LPSTR pCmdLine, int nCmdShow)
+#else
+int main(int argc, char *argv[])
+#endif
+{
+    if (!Init()) return 1;
+    SDL_Event event;
+    bool running = true;
+
+    #ifdef _WIN32
+    const wchar_t CLASS_NAME[] = L"Input Window Class";
+    WNDCLASS wc = { 0 };
+    wc.lpfnWndProc = DefWindowProc;
+    wc.hInstance = hInstance;
+    wc.lpszClassName = CLASS_NAME;
+
+    RegisterClass(&wc);
+    
+    HWND hwnd = CreateWindowEx(
+        0,
+        CLASS_NAME,
+        L"Input",
+        WS_OVERLAPPEDWINDOW,
+        CW_USEDEFAULT, CW_USEDEFAULT,
+        300, 500,
+        NULL,
+        NULL,
+        hInstance,
+        NULL
+    );
+
+    if (hwnd == NULL) {
+        SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Error", "hwnd == NULL", NULL);
+        return 0;
+    }
+
+    ShowWindow(hwnd, nCmdShow);
+    #endif
+
     FILE *file;
     char *filename = "bin/invaders.rom";
     int filesize;
     const int memsize = 1 << 16;
-
-    if (!Init()) return 1;
-    SDL_Event event;
-    bool running = true;
 
     // Initialize memory from ROM file
     if ((file = fopen(filename, "rb")) == NULL) {
@@ -60,7 +108,8 @@ int main(int argc, char *argv[])
     return 0;
 }
 
-static bool Init(void) {
+static bool Init(void)
+{
     if (SDL_Init(SDL_INIT_VIDEO) < 0) {
         printf("SDL_Init failed: %s", SDL_GetError());
         return false;
@@ -81,7 +130,8 @@ static bool Init(void) {
     return true;
 }
 
-static void Update(EmulatorState *state) {
+static void Update(EmulatorState *state)
+{
     static bool showedError = false;
     for (int i = 0; i < 5000; i++) {
         if (!EmulateInstruction(state) && !showedError) {
