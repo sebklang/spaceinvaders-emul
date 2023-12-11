@@ -3,8 +3,8 @@
 #include <SDL2/SDL.h>
 #include "emulator.h"
 
-#define WIDTH 256
-#define HEIGHT 224
+#define WIDTH 224
+#define HEIGHT 256
 
 static SDL_Surface *surface = NULL;
 static SDL_Window *window = NULL;
@@ -17,15 +17,29 @@ static void Update(EmulatorState *state);
 static void Render(void);
 static void Quit(void);
 
-static bool showedError = false;
-
 int main(int argc, char *argv[])
 {
+    FILE *file;
+    char *filename = "bin/invaders.rom";
+    int filesize;
+    const int memsize = 1 << 16;
+
     if (!Init()) return 1;
-    memory = malloc(1 << 16);
-    raster = &memory[0x2400];
     SDL_Event event;
     bool running = true;
+
+    // Initialize memory from ROM file
+    if ((file = fopen(filename, "rb")) == NULL) {
+        printf("Failed to open file %s for reading. Exiting...", filename);
+        return 1;
+    }
+    fseek(file, 0L, SEEK_END);
+    filesize = ftell(file);
+    fseek(file, 0L, SEEK_SET);
+    memory = malloc(memsize);
+    raster = &memory[0x2400];
+    fread(memory, filesize, 1, file);
+    fclose(file);
 
     EmulatorState _state;
     EmulatorState *state = &_state;
@@ -68,7 +82,8 @@ static bool Init(void) {
 }
 
 static void Update(EmulatorState *state) {
-    for (int i = 0; i < 100000; i++) {
+    static bool showedError = false;
+    for (int i = 0; i < 100; i++) {
         if (!EmulateInstruction(state) && !showedError) {
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Fatal error!", "Fatal error!", window);
             showedError = true;
@@ -78,20 +93,11 @@ static void Update(EmulatorState *state) {
 
 static void Render(void)
 {
-    /*
-    SDL_SetRenderDrawColor(renderer, 0, 255, 0, 255);
-    SDL_RenderClear(renderer);
-    SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
-    static SDL_Rect rect = {100, 100, 50, 50};
-    SDL_RenderFillRect(renderer, &rect);
-    SDL_RenderPresent(renderer);
-    rect.x++;
-    */
     SDL_SetRenderDrawColor(renderer, 0, 0, 0, 255);
     SDL_RenderClear(renderer);
     for (int i = 0; i < HEIGHT; i++) {
         for (int j = 0; j < WIDTH; j++) {
-            size_t pixelno = i * WIDTH + j;
+            size_t pixelno = (j + 1) * HEIGHT - i;
             size_t byteno = pixelno / 8;
             size_t bitno = pixelno % 8;
             bool pixel_active = (raster[byteno] >> bitno) & 1;
