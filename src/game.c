@@ -53,7 +53,7 @@ int main(int argc, char *argv[])
         }
         Update(state);
         Render();
-        SDL_Delay(1);
+        SDL_Delay(10);
     }
 
     Quit();
@@ -83,7 +83,7 @@ static bool Init(void) {
 
 static void Update(EmulatorState *state) {
     static bool showedError = false;
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 5000; i++) {
         if (!EmulateInstruction(state) && !showedError) {
             SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_ERROR, "Fatal error!", "Fatal error!", window);
             showedError = true;
