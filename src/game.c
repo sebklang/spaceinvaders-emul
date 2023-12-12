@@ -2,6 +2,7 @@
 #include <stdbool.h>
 #include <SDL2/SDL.h>
 #include "emulator.h"
+#include "memaccess.h"
 
 #ifdef _WIN32
 #include <windows.h>
@@ -38,7 +39,6 @@ int main(int argc, char *argv[])
 #endif
 {
     if (!Init()) return 1;
-    SDL_Event event;
     bool running = true;
 
     #ifdef _WIN32
@@ -93,10 +93,21 @@ int main(int argc, char *argv[])
     EmulatorState *state = &_state;
     InitEmulator(state, memory, 1 << 16, NULL, NULL);
 
+    SDL_Event event;
     while (running) {
         while (SDL_PollEvent(&event) != 0) {
-            if (event.type == SDL_QUIT) {
+            switch (event.type) {
+            case SDL_QUIT:
                 running = false;
+                break;
+            case SDL_KEYDOWN:
+                if (event.key.keysym.sym == SDLK_g) {
+                    SetMem(state, 0x20c0, 0);
+                }
+                else {
+                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Info", "Press G", window);
+                }
+                break;
             }
         }
         Update(state);
