@@ -10,7 +10,7 @@
 extern "C" {
 #endif
 
-int DisasmSingleInstruction(const char *, uint8_t *, int);
+int DisasmSingleInstruction(char *, uint8_t *, int);
 
 #ifdef __cplusplus
 }
