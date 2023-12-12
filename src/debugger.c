@@ -164,6 +164,19 @@ int main(int argc, char **argv)
             }
         }
 
+        // Set memory
+        else if (memcmp(input, "sm ", 3) == 0) {
+            char *endptr;
+            uint16_t location = strtol(&input[3], &endptr, 16);
+            uint8_t value = strtol(endptr, NULL, 16);
+            if (SetMem(state, location, value)) {
+                printf("Successfully set memory location 0x%04x to 0x%02x.\n");
+            }
+            else {
+                printf("Failed to set memory.\n");
+            }
+        }
+
         else {
             numIter = atoi(input);
         }
