@@ -42,18 +42,18 @@ int main(int argc, char *argv[])
     bool running = true;
 
     #ifdef _WIN32
-    const wchar_t CLASS_NAME[] = L"Input Window Class";
+    const LPCSTR CLASS_NAME = "Input Window Class";
     WNDCLASS wc = { 0 };
-    wc.lpfnWndProc = DefWindowProc;
+    wc.lpfnWndProc = DefWindowProcA;
     wc.hInstance = hInstance;
     wc.lpszClassName = CLASS_NAME;
 
-    RegisterClass(&wc);
+    RegisterClassA(&wc);
     
-    HWND hwnd = CreateWindowEx(
+    HWND hwnd = CreateWindowExA(
         0,
         CLASS_NAME,
-        L"Input",
+        "Foobar",
         WS_OVERLAPPEDWINDOW,
         CW_USEDEFAULT, CW_USEDEFAULT,
         300, 500,
