@@ -101,11 +101,13 @@ int main(int argc, char *argv[])
                 running = false;
                 break;
             case SDL_KEYDOWN:
-                if (event.key.keysym.sym == SDLK_g) {
+                switch (event.key.keysym.sym) {
+                case SDLK_g:
                     SetMem(state, 0x20c0, 0);
-                }
-                else {
-                    SDL_ShowSimpleMessageBox(SDL_MESSAGEBOX_INFORMATION, "Info", "Press G", window);
+                    break;
+                case SDLK_h:
+                    SetMem(state, 0x20c0, 1);
+                    break;
                 }
                 break;
             }
