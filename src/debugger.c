@@ -143,7 +143,7 @@ int main(int argc, char **argv)
             if (dest >= 0 && dest <= 0xffff) {
                 uint8_t *dataptr = GetMem(state, dest);
                 if (dataptr) {
-                    printf("Memory @ %04x: %02x\n", dest, *dataptr);
+                    printf("Memory @ %04x: %02x\n", (uint16_t) dest, *dataptr);
                 }
                 else {
                     printf("Impossible error.\n");
@@ -170,7 +170,7 @@ int main(int argc, char **argv)
             uint16_t location = strtol(&input[3], &endptr, 16);
             uint8_t value = strtol(endptr, NULL, 16);
             if (SetMem(state, location, value)) {
-                printf("Successfully set memory location 0x%04x to 0x%02x.\n");
+                printf("Successfully set memory location 0x%04x to 0x%02x.\n", location, value);
             }
             else {
                 printf("Failed to set memory.\n");
