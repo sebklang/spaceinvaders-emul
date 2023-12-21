@@ -7,4 +7,4 @@ disasm
 *.exe
 Makefile
 main*
-
+*.dSYM/
